@@ -5,12 +5,16 @@ CFLAGS = -std=c++11 -funroll-loops -Wall
 
 # rapidjson
 RJSON_PATH = $(HOME)/Github/cpmf/vendor/rapidjson
-INC_FLAGS = -I$(RJSON_PATH)/include
+INCLUDE_FLAGS = -I$(RJSON_PATH)/include
 
 all: cpmf
 
-cpmf: main.cpp
-	$(CXX) $(CFLAGS) $(INC_FLAGS) -o $@ $<
+matrix.o: core/matrix.cpp core/core.hpp
+	$(CXX) $(CFLAGS) -c -o $@ $<
 
+cpmf: main.cpp matrix.o core/core.hpp
+	$(CXX) $(CFLAGS) $(INCLUDE_FLAGS) -o $@ $<
+
+.PHONY: clean
 clean:
-	rm -f cpmf
+	rm -f cpmf matrix.o
