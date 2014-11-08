@@ -2,6 +2,7 @@
 #define CPMF_CORE_HPP_
 
 #include <vector>
+#include "../config.hpp"
 
 namespace cpmf {
 namespace core {
