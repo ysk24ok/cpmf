@@ -9,14 +9,22 @@
 
 namespace cpmf {
 
+  struct Parameter {
+    Parameter() : dim(40), lp(1), lq(1), step_size(0.005) {}
+
+    int dim;
+    float lp, lq, step_size;
+  };
+
   struct Config {
     Config() :
-      dim(40), max_iter(10), step_size(0.005),
-      parallel_method("task based") {}
+      max_iter(10), num_user_blocks(1), num_item_blocks(1),
+      parallel_method("task based"), input_path("./input/testdata"),
+      params() {}
 
-    int dim, max_iter, num_user_blocks, num_item_blocks;
-    float step_size;
+    int max_iter, num_user_blocks, num_item_blocks;
     std::string parallel_method, input_path;
+    Parameter params;
   };
 
   std::shared_ptr<Config> parse_config_json(FILE * fp) {
@@ -26,11 +34,14 @@ namespace cpmf {
     doc.ParseStream<0, rapidjson::UTF8<>, rapidjson::FileReadStream>(is);
 
     std::shared_ptr<Config> config_ptr(new Config);
-    config_ptr->dim             = doc["dimension"].GetInt();
+    config_ptr->params.dim       = doc["dimension"].GetInt();
+    config_ptr->params.step_size = (float) doc["step_size"].GetDouble();
+    config_ptr->params.lp = (float) doc["regularization_cost_for_P"].GetDouble();
+    config_ptr->params.lq = (float) doc["regularization_cost_for_Q"].GetDouble();
+
     config_ptr->max_iter        = doc["max_iter"].GetInt();
     config_ptr->num_user_blocks = doc["num_user_blocks"].GetInt();
     config_ptr->num_item_blocks = doc["num_item_blocks"].GetInt();
-    config_ptr->step_size       = (float) doc["step_size"].GetDouble();
     config_ptr->parallel_method = doc["parallel_method"].GetString();
     config_ptr->input_path      = doc["input_path"].GetString();
 

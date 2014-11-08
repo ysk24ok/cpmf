@@ -1,10 +1,14 @@
 {
-  "dimension": 40,
+  "parallel_method": "task",
+
   "max_iter": 20,
   "num_user_blocks": 4,
   "num_item_blocks": 4,
+
+  "dimension": 40,
   "step_size": 0.005,
-  "parallel_method": "task",
+  "regularization_cost_for_P": 0.003,
+  "regularization_cost_for_Q": 0.003,
 
   "input_path": "input/testdata"
 }
