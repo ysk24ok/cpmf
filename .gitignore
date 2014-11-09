@@ -28,5 +28,5 @@
 *.app
 
 # cpmf files
-cpmf
+mf
 vendor

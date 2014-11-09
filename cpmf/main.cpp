@@ -5,9 +5,9 @@
 #include <rapidjson/document.h>
 #include <rapidjson/filereadstream.h>
 
+#include <cpmf/core/matrix.cpp>
+#include <cpmf/core/model.cpp>
 #include "config.hpp"
-#include "core/matrix.cpp"
-#include "core/model.cpp"
 
 namespace cpmf {
 
