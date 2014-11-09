@@ -33,6 +33,19 @@ class Matrix {
     void sort_nodes_by_user_id();
 };
 
+class Model {
+  public:
+    std::vector<std::vector<float>> P, Q;
+
+    Model(cpmf::Parameter &config_params, int const num_u, int const num_i);
+    ~Model();
+  private:
+    Parameter params;
+    int num_users, num_items;
+
+    void initialize(std::vector<std::vector<float>> &model_matrix);
+};
+
 } // namespace core
 } // namespace cpmf
 

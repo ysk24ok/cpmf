@@ -7,6 +7,7 @@
 
 #include "config.hpp"
 #include "core/matrix.cpp"
+#include "core/model.cpp"
 
 namespace cpmf {
 
@@ -65,6 +66,9 @@ int main(int argc, char *argv[]) {
   }
   std::shared_ptr<cpmf::core::Matrix> R(new cpmf::core::Matrix(config_ptr->num_user_blocks, config_ptr->num_item_blocks, fp_input));
   fclose(fp_input);
+
+  // initialize model
+  std::shared_ptr<cpmf::core::Model> model(new cpmf::core::Model(config_ptr->params, R->num_users, R->num_items));
 
   return EXIT_SUCCESS;
 }
