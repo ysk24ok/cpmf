@@ -1,8 +1,8 @@
 #include <vector>
-#include "core.hpp"
+#include "common.hpp"
 
 namespace cpmf {
-namespace core {
+namespace common {
 
 Model::Model(cpmf::Parameter &config_params, int const num_u, int const num_i) {
   params = config_params;
@@ -28,5 +28,5 @@ void Model::initialize() {
 Model::~Model() {}
 
 
-} // namespace core
+} // namespace common
 } // namespace cpmf

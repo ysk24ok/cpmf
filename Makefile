@@ -14,13 +14,13 @@ OBJ := matrix.o model.o tp_based_train.o
 
 all: mf
 
-%.o: cpmf/core/%.cpp cpmf/core/core.hpp
+%.o: cpmf/common/%.cpp cpmf/common/common.hpp
 	$(CXX) $(CFLAGS) $(CPMF_INCLUDE_FLAGS) -c -o $@ $<
 
-tp_based_train.o: cpmf/parallel/task_parallel_based/train.cpp cpmf/core/core.hpp
+tp_based_train.o: cpmf/parallel/task_parallel_based/train.cpp cpmf/common/common.hpp
 	$(CXX) $(CFLAGS) $(CPMF_INCLUDE_FLAGS) $(CILK_INCLUDE_FLAGS) -c -o $@ $<
 
-mf: cpmf/main.cpp $(OBJ) cpmf/core/core.hpp
+mf: cpmf/main.cpp $(OBJ) cpmf/common/common.hpp
 	$(CXX) $(CFLAGS) $(RJSON_INCLUDE_FLAGS) $(CPMF_INCLUDE_FLAGS) $(DFLAGS) -o $@ $<
 
 .PHONY: clean

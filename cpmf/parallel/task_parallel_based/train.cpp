@@ -1,20 +1,20 @@
 #include <vector>
 #include <memory>
 #include <cilk/cilk.h>
-#include <cpmf/core/core.hpp>
+#include <cpmf/common/common.hpp>
 
 namespace cpmf {
 namespace parallel {
 namespace task_parallel_based {
 
-void divide(std::shared_ptr<cpmf::core::Matrix> const R,
-            std::shared_ptr<cpmf::core::Model> model,
+void divide(std::shared_ptr<cpmf::common::Matrix> const R,
+            std::shared_ptr<cpmf::common::Model> model,
             int const block_length,
             int const initial_user_id, int const initial_item_id) {
   int const half_block_length = block_length / 2;
   if (half_block_length == 0) {
     int const block_id = initial_user_id * R->num_user_blocks + initial_item_id;
-    cpmf::core::sgd(R->blocks[block_id], model);
+    cpmf::common::sgd(R->blocks[block_id], model);
     return;
   }
 
@@ -31,8 +31,8 @@ void divide(std::shared_ptr<cpmf::core::Matrix> const R,
   cilk_sync;
 }
 
-void train(std::shared_ptr<cpmf::core::Matrix> const R,
-           std::shared_ptr<cpmf::core::Model> model,
+void train(std::shared_ptr<cpmf::common::Matrix> const R,
+           std::shared_ptr<cpmf::common::Model> model,
            int const max_iter) {
   for (int iter = 1; iter <= max_iter; iter++) {
     // TODO: Here, assume the num_user_blocks and num_item_blocks are equal

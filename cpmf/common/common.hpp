@@ -7,7 +7,7 @@
 #include <cpmf/config.hpp>
 
 namespace cpmf {
-namespace core {
+namespace common {
 
 struct Node {
   Node() : user_id(0), item_id(0), rating(0) {}
@@ -67,7 +67,7 @@ inline void sgd(Block const &block, std::shared_ptr<Model> model) {
   }
 }
 
-} // namespace core
+} // namespace common
 } // namespace cpmf
 
 #endif // CPMF_CORE_HPP_

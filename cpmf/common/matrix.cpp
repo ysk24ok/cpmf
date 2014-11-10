@@ -1,9 +1,9 @@
 #include <vector>
 #include <algorithm>
-#include "core.hpp"
+#include "common.hpp"
 
 namespace cpmf {
-namespace core {
+namespace common {
 
 Matrix::Matrix(int const num_u_blks, int const num_i_blks, FILE * fp_input) {
   initialize(num_u_blks, num_i_blks);
@@ -61,5 +61,5 @@ void Matrix::sort_nodes_by_user_id() {
 Matrix::~Matrix() {}
 
 
-} // namespace core
+} // namespace common
 } // namespace cpmf

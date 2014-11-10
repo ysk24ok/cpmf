@@ -6,8 +6,8 @@
 #include <rapidjson/document.h>
 #include <rapidjson/filereadstream.h>
 
-#include <cpmf/core/matrix.cpp>
-#include <cpmf/core/model.cpp>
+#include <cpmf/common/matrix.cpp>
+#include <cpmf/common/model.cpp>
 #include "config.hpp"
 
 #if defined TASK_PARALLEL
@@ -68,13 +68,13 @@ int main(int argc, char *argv[]) {
   if (fp_input == NULL) {
     fprintf(stderr, "Error: Cannot open input data");
   }
-  std::shared_ptr<cpmf::core::Matrix> R(new cpmf::core::Matrix(
+  std::shared_ptr<cpmf::common::Matrix> R(new cpmf::common::Matrix(
                                           config->num_user_blocks,
                                           config->num_item_blocks, fp_input));
   fclose(fp_input);
 
   // initialize model
-  std::shared_ptr<cpmf::core::Model> model(new cpmf::core::Model(
+  std::shared_ptr<cpmf::common::Model> model(new cpmf::common::Model(
                                              config->params,
                                              R->num_users, R->num_items));
 
