@@ -1,6 +1,8 @@
 #ifndef CPMF_CORE_HPP_
 #define CPMF_CORE_HPP_
 
+#include <memory>
+#include <numeric>
 #include <vector>
 #include <cpmf/config.hpp>
 
@@ -35,16 +37,35 @@ class Matrix {
 
 class Model {
   public:
+    Parameter params;
+    int num_users, num_items;
     std::vector<std::vector<float>> P, Q;
 
     Model(cpmf::Parameter &config_params, int const num_u, int const num_i);
     ~Model();
   private:
-    Parameter params;
-    int num_users, num_items;
-
     void initialize();
 };
+
+inline void sgd(Block const &block, std::shared_ptr<Model> model) {
+  int const dim         = model->params.dim;
+  float const step_size = model->params.step_size;
+  float const lp        = model->params.lp;
+  float const lq        = model->params.lq;
+
+  for (auto node = block.nodes.begin(); node != block.nodes.end(); node++) {
+    std::vector<float> p = model->P[node->user_id - 1];
+    std::vector<float> q = model->Q[node->item_id - 1];
+
+    float error = node->rating - std::inner_product(p.begin(), p.end(), q.begin(), 0.0);
+
+    for (int d = 0; d < dim; d++) {
+      float tmp_p = p[d];
+      p[d] += step_size * (error * q[d] - lp * p[d]);
+      q[d] += step_size * (error * tmp_p - lq * q[d]);
+    }
+  }
+}
 
 } // namespace core
 } // namespace cpmf

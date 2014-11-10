@@ -1,6 +1,4 @@
 {
-  "parallel_method": "task",
-
   "max_iter": 20,
   "num_user_blocks": 4,
   "num_item_blocks": 4,
