@@ -1,22 +1,18 @@
-#include <vector>
 #include <algorithm>
 #include "common.hpp"
 
 namespace cpmf {
 namespace common {
 
-Matrix::Matrix(int const num_u_blks, int const num_i_blks, FILE * fp_input) {
+Matrix::Matrix(int const num_u_blks, int const num_i_blks, FILE * fp_input)
+  : num_users(0), num_items(0),
+    num_user_blocks(num_u_blks), num_item_blocks(num_i_blks) {
   initialize(num_u_blks, num_i_blks);
   read(fp_input);
   sort_nodes_by_user_id();
 }
 
 void Matrix::initialize(int const num_u_blks, int const num_i_blks) {
-  num_users = 0;
-  num_items = 0;
-  num_user_blocks = num_u_blks;
-  num_item_blocks = num_i_blks;
-
   for (int block_id = 0; block_id < num_user_blocks * num_item_blocks; block_id++) {
     int block_user_id = block_id / num_user_blocks;
     int block_item_id = block_id % num_user_blocks;
