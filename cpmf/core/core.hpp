@@ -43,7 +43,7 @@ class Model {
     Parameter params;
     int num_users, num_items;
 
-    void initialize(std::vector<std::vector<float>> &model_matrix);
+    void initialize();
 };
 
 } // namespace core
