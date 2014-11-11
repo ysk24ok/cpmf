@@ -47,7 +47,7 @@ class Model {
     inline void sgd(Block const &block);
     ~Model();
   private:
-    void initialize();
+    void initialize(std::vector<std::vector<float>> &model_matrix);
     inline float calc_error(Node const &node);
 };
 
