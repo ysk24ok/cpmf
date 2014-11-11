@@ -35,6 +35,7 @@ class Matrix {
     void sort_nodes_by_user_id();
 };
 
+
 class Model {
   public:
     Parameter params;
@@ -42,27 +43,30 @@ class Model {
     std::vector<std::vector<float>> P, Q;
 
     Model(cpmf::Parameter &config_params, int const num_u, int const num_i);
+    float calc_rmse(std::shared_ptr<Matrix> const R);
+    inline void sgd(Block const &block);
     ~Model();
   private:
     void initialize();
+    inline float calc_error(Node const &node);
 };
 
-inline void sgd(Block const &block, std::shared_ptr<Model> model) {
-  int const dim         = model->params.dim;
-  float const step_size = model->params.step_size;
-  float const lp        = model->params.lp;
-  float const lq        = model->params.lq;
+inline float Model::calc_error(Node const &node) {
+  std::vector<float> p = P[node.user_id - 1];
+  std::vector<float> q = Q[node.item_id - 1];
+  return node.rating - std::inner_product(p.begin(), p.end(), q.begin(), 0.0);
+}
 
+inline void Model::sgd(Block const &block) {
   for (auto node = block.nodes.begin(); node != block.nodes.end(); node++) {
-    std::vector<float> p = model->P[node->user_id - 1];
-    std::vector<float> q = model->Q[node->item_id - 1];
+    float error = calc_error(*node);
 
-    float error = node->rating - std::inner_product(p.begin(), p.end(), q.begin(), 0.0);
-
-    for (int d = 0; d < dim; d++) {
-      float tmp_p = p[d];
-      p[d] += step_size * (error * q[d] - lp * p[d]);
-      q[d] += step_size * (error * tmp_p - lq * q[d]);
+    std::vector<float> p = P[node->user_id - 1];
+    std::vector<float> q = Q[node->item_id - 1];
+    for (int d = 0; d < params.dim; d++) {
+      float temp = p[d];
+      p[d] += params.step_size * (error * q[d] - params.lp * p[d]);
+      q[d] += params.step_size * (error * temp - params.lq * q[d]);
     }
   }
 }

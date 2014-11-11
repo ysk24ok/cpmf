@@ -1,3 +1,4 @@
+#include <cmath>
 #include "common.hpp"
 
 namespace cpmf {
@@ -19,6 +20,19 @@ void Model::initialize() {
       }
     }
   }
+}
+
+float Model::calc_rmse(std::shared_ptr<Matrix> R) {
+  double loss = 0;
+
+  for (Block block : R->blocks) {
+    for (Node node : block.nodes) {
+      float error = calc_error(node);
+      loss += error * error;
+    }
+  }
+
+  return std::sqrt(loss/R->num_ratings);
 }
 
 Model::~Model() {}

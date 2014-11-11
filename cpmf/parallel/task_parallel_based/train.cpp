@@ -16,7 +16,7 @@ void divide(std::shared_ptr<cpmf::common::Matrix> const R,
   int const half_block_length = block_length / 2;
   if (half_block_length == 0) {
     int const block_id = initial_user_id * R->num_user_blocks + initial_item_id;
-    cpmf::common::sgd(R->blocks[block_id], model);
+    model->sgd(R->blocks[block_id]);
     return;
   }
 
