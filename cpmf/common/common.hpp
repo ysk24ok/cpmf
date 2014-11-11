@@ -61,12 +61,12 @@ inline void Model::sgd(Block const &block) {
   for (auto node = block.nodes.begin(); node != block.nodes.end(); node++) {
     float error = calc_error(*node);
 
-    std::vector<float> p = P[node->user_id - 1];
-    std::vector<float> q = Q[node->item_id - 1];
+    int uid = node->user_id - 1;
+    int iid = node->item_id - 1;
     for (int d = 0; d < params.dim; d++) {
-      float temp = p[d];
-      p[d] += params.step_size * (error * q[d] - params.lp * p[d]);
-      q[d] += params.step_size * (error * temp - params.lq * q[d]);
+      float tmp_p_val = P[uid][d];
+      P[uid][d] += params.step_size * (error * Q[iid][d] - params.lp * P[uid][d]);
+      Q[iid][d] += params.step_size * (error * tmp_p_val - params.lq * Q[iid][d]);
     }
   }
 }
