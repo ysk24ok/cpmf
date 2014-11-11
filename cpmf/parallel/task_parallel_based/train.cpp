@@ -1,7 +1,9 @@
 #include <vector>
 #include <memory>
 #include <cilk/cilk.h>
+
 #include <cpmf/common/common.hpp>
+#include <cpmf/utils/utils.hpp>
 
 namespace cpmf {
 namespace parallel {
@@ -34,10 +36,14 @@ void divide(std::shared_ptr<cpmf::common::Matrix> const R,
 void train(std::shared_ptr<cpmf::common::Matrix> const R,
            std::shared_ptr<cpmf::common::Model> model,
            int const max_iter) {
+  cpmf::utils::Timer timer;
+  timer.start();
   for (int iter = 1; iter <= max_iter; iter++) {
+    timer.resume();
     // TODO: Here, assume the num_user_blocks and num_item_blocks are equal
     cilk_spawn divide(R, model, R->num_user_blocks, 0, 0);
     cilk_sync;
+    timer.pause();
   }
 }
 
