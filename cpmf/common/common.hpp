@@ -30,8 +30,9 @@ class Matrix {
     Matrix(int const num_u_blks, int const num_i_blks, FILE * fp_input);
     ~Matrix();
   private:
-    void initialize(int const num_u_blks, int const num_i_blks);
-    void read(FILE * fp_input);
+    void initialize_blocks();
+    void read(FILE * fp_input, std::vector<Node> &temp_nodes);
+    void assign_nodes(std::vector<Node> &temp_nodes);
     void sort_nodes_by_user_id();
 };
 
