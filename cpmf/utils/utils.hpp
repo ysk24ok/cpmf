@@ -10,8 +10,8 @@ namespace utils {
 class Logger {
  public:
   Logger() : basic_blank_("   "), time_sec_suffix_(" sec") {}
-  void log_msg(std::string const &msg);
-  void log_msg_with_time(std::string const &msg, float const &time_sec);
+  void put_msg(std::string const &msg);
+  void put_msg_with_time(std::string const &msg, float const &time_sec);
  private:
   std::string basic_blank_;
   std::string time_sec_suffix_;
