@@ -9,6 +9,7 @@
 #include <cpmf/common/matrix.cpp>
 #include <cpmf/common/model.cpp>
 #include <cpmf/utils/timer.cpp>
+#include <cpmf/utils/logger.cpp>
 #include "config.hpp"
 
 #if defined TASK_PARALLEL
