@@ -37,14 +37,18 @@ void train(std::shared_ptr<cpmf::common::Matrix> const R,
            std::shared_ptr<cpmf::common::Model> model,
            int const max_iter) {
   cpmf::utils::Timer timer;
-  timer.start();
+  cpmf::utils::Logger logger;
+
+  timer.start("Now iteration starts...");
+  logger.put_table_header("iteration", 2, "time", "RMSE");
   for (int iter = 1; iter <= max_iter; iter++) {
     timer.resume();
     // TODO: Here, assume the num_user_blocks and num_item_blocks are equal
     cilk_spawn divide(R, model, R->num_user_blocks, 0, 0);
     cilk_sync;
-    timer.pause();
+    logger.put_table_row(iter, 2, timer.pause(), model->calc_rmse(R));
   }
+  timer.stop("ends.");
 }
 
 } // namespace task_based

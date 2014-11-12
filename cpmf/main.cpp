@@ -57,6 +57,8 @@ int main(int argc, char *argv[]) {
     return EXIT_FAILURE;
   }
 
+  cpmf::utils::Timer timer;
+
   // parse config.json
   FILE * fp_json = fopen("./config.json", "r");
   if (fp_json == NULL) {
@@ -66,6 +68,7 @@ int main(int argc, char *argv[]) {
   fclose(fp_json);
 
   // parse input_data
+  timer.start("Now parsing input data...");
   FILE * fp_input = fopen(config->input_path.c_str(), "r");
   if (fp_input == NULL) {
     fprintf(stderr, "Error: Cannot open input data");
@@ -74,11 +77,14 @@ int main(int argc, char *argv[]) {
                                           config->num_user_blocks,
                                           config->num_item_blocks, fp_input));
   fclose(fp_input);
+  timer.stop("ends.");
 
   // initialize model
+  timer.start("Now initializing model...");
   std::shared_ptr<cpmf::common::Model> model(new cpmf::common::Model(
                                              config->params,
                                              R->num_users, R->num_items));
+  timer.stop("ends.");
 
   // begin training
   cpmf::parallel::task_parallel_based::train(R, model, config->max_iter);

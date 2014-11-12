@@ -12,6 +12,8 @@ class Logger {
   Logger() : basic_blank_("   "), time_sec_suffix_(" sec") {}
   void put_msg(std::string const &msg);
   void put_msg_with_time(std::string const &msg, float const &time_sec);
+  void put_table_header(const char * id, int num, ...);
+  void put_table_row(int id, int num, ...);
  private:
   std::string basic_blank_;
   std::string time_sec_suffix_;
