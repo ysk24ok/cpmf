@@ -22,34 +22,37 @@ struct Block {
 };
 
 class Matrix {
-  public:
-    int num_users, num_items, num_user_blocks, num_item_blocks;
-    long num_ratings;
-    std::vector<Block> blocks;
+ public:
+  Matrix(int const num_u_blks, int const num_i_blks, FILE * fp_input);
+  ~Matrix();
 
-    Matrix(int const num_u_blks, int const num_i_blks, FILE * fp_input);
-    ~Matrix();
-  private:
-    void initialize_blocks();
-    void read(FILE * fp_input, std::vector<Node> &temp_nodes);
-    void assign_nodes(std::vector<Node> &temp_nodes);
-    void sort_nodes_by_user_id();
+  int num_users, num_items, num_user_blocks, num_item_blocks;
+  long num_ratings;
+  std::vector<Block> blocks;
+
+ private:
+  void initialize_blocks();
+  void read(FILE * fp_input, std::vector<Node> &temp_nodes);
+  void assign_nodes(std::vector<Node> &temp_nodes);
+  void sort_nodes_by_user_id();
 };
 
 
 class Model {
-  public:
-    Parameter params;
-    int num_users, num_items;
-    std::vector<std::vector<float>> P, Q;
+ public:
+  Model(cpmf::Parameter &config_params, int const num_u, int const num_i);
+  ~Model();
 
-    Model(cpmf::Parameter &config_params, int const num_u, int const num_i);
-    float calc_rmse(std::shared_ptr<Matrix> const R);
-    inline void sgd(Block const &block);
-    ~Model();
-  private:
-    void initialize(std::vector<std::vector<float>> &model_matrix);
-    inline float calc_error(Node const &node);
+  float calc_rmse(std::shared_ptr<Matrix> const R);
+  inline void sgd(Block const &block);
+
+  Parameter params;
+  int num_users, num_items;
+  std::vector<std::vector<float>> P, Q;
+
+ private:
+  void initialize(std::vector<std::vector<float>> &model_matrix);
+  inline float calc_error(Node const &node);
 };
 
 inline float Model::calc_error(Node const &node) {
@@ -59,6 +62,7 @@ inline float Model::calc_error(Node const &node) {
 }
 
 inline void Model::sgd(Block const &block) {
+  float step_size = params.step_size;
   for (auto node = block.nodes.begin(); node != block.nodes.end(); node++) {
     float error = calc_error(*node);
 
@@ -66,8 +70,8 @@ inline void Model::sgd(Block const &block) {
     int iid = node->item_id - 1;
     for (int d = 0; d < params.dim; d++) {
       float tmp_p_val = P[uid][d];
-      P[uid][d] += params.step_size * (error * Q[iid][d] - params.lp * P[uid][d]);
-      Q[iid][d] += params.step_size * (error * tmp_p_val - params.lq * Q[iid][d]);
+      P[uid][d] += step_size * (error * Q[iid][d] - params.lp * P[uid][d]);
+      Q[iid][d] += step_size * (error * tmp_p_val - params.lq * Q[iid][d]);
     }
   }
 }

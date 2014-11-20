@@ -46,7 +46,9 @@ void train(std::shared_ptr<cpmf::common::Matrix> const R,
     // TODO: Here, assume the num_user_blocks and num_item_blocks are equal
     cilk_spawn divide(R, model, R->num_user_blocks, 0, 0);
     cilk_sync;
-    logger.put_table_row(iter, 2, timer.pause(), model->calc_rmse(R));
+    float iter_time = timer.pause();
+    float rmse = model->calc_rmse(R);
+    logger.put_table_row(iter, 2, iter_time, rmse);
   }
   timer.stop("ends.");
 }

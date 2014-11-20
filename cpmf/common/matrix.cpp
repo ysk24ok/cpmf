@@ -18,7 +18,8 @@ Matrix::Matrix(int const num_u_blks, int const num_i_blks, FILE * fp_input)
 }
 
 void Matrix::initialize_blocks() {
-  for (int block_id = 0; block_id < num_user_blocks * num_item_blocks; block_id++) {
+  int const total_num_blocks = num_user_blocks * num_item_blocks;
+  for (int block_id = 0; block_id < total_num_blocks; block_id++) {
     int block_user_id = block_id / num_user_blocks;
     int block_item_id = block_id % num_user_blocks;
     blocks.push_back(Block(block_user_id, block_item_id));

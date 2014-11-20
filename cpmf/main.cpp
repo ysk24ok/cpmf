@@ -74,16 +74,16 @@ int main(int argc, char *argv[]) {
     fprintf(stderr, "Error: Cannot open input data");
   }
   std::shared_ptr<cpmf::common::Matrix> R(new cpmf::common::Matrix(
-                                          config->num_user_blocks,
-                                          config->num_item_blocks, fp_input));
+                                            config->num_user_blocks,
+                                            config->num_item_blocks, fp_input));
   fclose(fp_input);
   timer.stop("ends.");
 
   // initialize model
   timer.start("Now initializing model...");
   std::shared_ptr<cpmf::common::Model> model(new cpmf::common::Model(
-                                             config->params,
-                                             R->num_users, R->num_items));
+                                               config->params,
+                                               R->num_users, R->num_items));
   timer.stop("ends.");
 
   // begin training
