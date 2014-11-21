@@ -11,7 +11,8 @@ namespace common {
 
 struct Node {
   Node() : user_id(0), item_id(0), rating(0) {}
-  int user_id, item_id, rating;
+  int user_id, item_id;
+  float rating;
 };
 
 struct Block {

@@ -5,12 +5,15 @@ import sys
 import random
 
 """
-usage example: python3 testdata_generator.py 1000 1000 10000 1..5 ../input/testdata
-arg1: the number of users
-arg2: the number of items
-arg3: the number of ratings
-arg4: the range of ratings (minimum and maximum rating should be specified)
-arg5: path of the output file
+usage: python3 testdata_generator.py 1000 1000 10000 1..5 ../input/testdata
+ - arg1: the number of users
+ - arg2: the number of items
+ - arg3: the number of ratings
+ - arg4: the range of ratings
+         Minimum and maximum rating should be specified.
+         Rating value is the floating point value rounded by 1 digits
+         after the decimal point.
+ - arg5: path of the output file
 """
 
 def get_msg(user_id, item_id, rating):
@@ -41,11 +44,13 @@ if __name__ == "__main__":
     f = open(testdata_path, "w")
 
     # the case of the maximum numbers of users and items
-    f.writelines( get_msg(random.randint(1, num_users), num_items, random.randint(minimum_rating, maximum_rating)) );
-    f.writelines( get_msg(num_users, random.randint(1, num_items), random.randint(minimum_rating, maximum_rating)) );
+    f.writelines( get_msg(random.randint(1, num_users), num_items,
+                    round(random.uniform(minimum_rating, maximum_rating), 1)) );
+    f.writelines( get_msg(num_users, random.randint(1, num_items),
+                    round(random.uniform(minimum_rating, maximum_rating), 1)) );
 
     for i in range(0, num_ratings - 2):
-        rand_rating = random.randint(minimum_rating, maximum_rating)
+        rand_rating = round(random.uniform(minimum_rating, maximum_rating), 1)
 
         # avoid existing user-item combinations
         while True:

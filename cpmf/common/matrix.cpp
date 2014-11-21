@@ -28,7 +28,7 @@ void Matrix::initialize_blocks() {
 void Matrix::read(FILE * fp_input, std::vector<Node> * temp_nodes) {
   while (true) {
     Node node;
-    if (fscanf(fp_input, "%d %d %d\n",
+    if (fscanf(fp_input, "%d %d %f\n",
           &node.user_id, &node.item_id, &node.rating) == EOF) {
       return;
     }
