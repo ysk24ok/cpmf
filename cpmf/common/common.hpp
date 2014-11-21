@@ -57,15 +57,15 @@ class Model {
 
 inline float Model::calc_error(const int &uid, const int &iid,
                                 const int &rate) {
-  std::vector<float> p = P[uid];
-  std::vector<float> q = Q[iid];
-  return rate - std::inner_product(p.begin(), p.end(), q.begin(), 0.0);
+  const std::vector<float> * p = &P[uid];
+  const std::vector<float> * q = &Q[iid];
+  return rate - std::inner_product(p->begin(), p->end(), q->begin(), 0.0);
 }
 
 inline void Model::sgd(const Block &block) {
-  float const step_size = params.step_size;
-  float const lp = step_size * params.lp;
-  float const lq = step_size * params.lq;
+  const float step_size = params.step_size;
+  const float lp = step_size * params.lp;
+  const float lq = step_size * params.lq;
 
   for (const auto &node : block.nodes) {
     int uid = node.user_id - 1;
