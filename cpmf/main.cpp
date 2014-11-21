@@ -38,7 +38,6 @@ std::shared_ptr<cpmf::Config> parse_config_json(FILE * fp) {
   return config;
 }
 
-
 } // namespace cpmf
 
 

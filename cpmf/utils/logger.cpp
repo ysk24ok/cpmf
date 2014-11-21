@@ -6,17 +6,17 @@
 namespace cpmf {
 namespace utils {
 
-void Logger::put_msg(std::string const &msg) {
+void Logger::put_msg(const std::string &msg) {
   if (msg != "") { std::cout << msg << std::endl; }
 }
 
-void Logger::put_msg_with_time(std::string const &msg, float const &time_sec) {
+void Logger::put_msg_with_time(const std::string &msg, const float &time_sec) {
   if (msg == "") { return; }
   std::string t = "(" + std::to_string(time_sec) + time_sec_suffix_ + ")";
   std::cout << msg + basic_blank_ + t << std::endl;
 }
 
-void Logger::put_table_header(const char * id, int num, ...) {
+void Logger::put_table_header(const char * id, const int &num, ...) {
   char header[80] = "|";
   char border[80] = "|";
   sprintf(header+strlen(header), "%10s|", id);
@@ -34,7 +34,7 @@ void Logger::put_table_header(const char * id, int num, ...) {
   printf("%s\n%s\n", header, border);
 }
 
-void Logger::put_table_row(int id, int num, ...) {
+void Logger::put_table_row(const int &id, const int &num, ...) {
   char row[80] = "|";
   sprintf(row+strlen(row), "%10d|", id);
 

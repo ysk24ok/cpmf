@@ -15,7 +15,7 @@ struct Node {
 };
 
 struct Block {
-  Block(int const block_user_id, int const block_item_id)
+  Block(const int &block_user_id, const int &block_item_id)
     : user_id(block_user_id), item_id(block_item_id), nodes(0) {}
   int user_id, item_id;
   std::vector<Node> nodes;
@@ -23,7 +23,7 @@ struct Block {
 
 class Matrix {
  public:
-  Matrix(int const num_u_blks, int const num_i_blks, FILE * fp_input);
+  Matrix(const int &num_u_blks, const int &num_i_blks, FILE * fp_input);
   ~Matrix();
 
   int num_users, num_items, num_user_blocks, num_item_blocks;
@@ -32,46 +32,49 @@ class Matrix {
 
  private:
   void initialize_blocks();
-  void read(FILE * fp_input, std::vector<Node> &temp_nodes);
-  void assign_nodes(std::vector<Node> &temp_nodes);
+  void read(FILE * fp_input, std::vector<Node> * temp_nodes);
+  void assign_nodes(const std::vector<Node> &temp_nodes);
   void sort_nodes_by_user_id();
 };
 
 
 class Model {
  public:
-  Model(cpmf::Parameter &config_params, int const num_u, int const num_i);
+  Model(const cpmf::Parameter &conf_params, const int &num_u, const int &num_i);
   ~Model();
 
-  float calc_rmse(std::shared_ptr<Matrix> const R);
-  inline void sgd(Block const &block);
+  float calc_rmse(const std::shared_ptr<Matrix> R);
+  inline void sgd(const Block &block);
 
   Parameter params;
   int num_users, num_items;
   std::vector<std::vector<float>> P, Q;
 
  private:
-  void initialize(std::vector<std::vector<float>> &model_matrix);
-  inline float calc_error(Node const &node);
+  void initialize(std::vector<float> * column);
+  inline float calc_error(const int &uid, const int &iid, const int &rate);
 };
 
-inline float Model::calc_error(Node const &node) {
-  std::vector<float> p = P[node.user_id - 1];
-  std::vector<float> q = Q[node.item_id - 1];
-  return node.rating - std::inner_product(p.begin(), p.end(), q.begin(), 0.0);
+inline float Model::calc_error(const int &uid, const int &iid,
+                                const int &rate) {
+  std::vector<float> p = P[uid];
+  std::vector<float> q = Q[iid];
+  return rate - std::inner_product(p.begin(), p.end(), q.begin(), 0.0);
 }
 
-inline void Model::sgd(Block const &block) {
-  float step_size = params.step_size;
-  for (auto node = block.nodes.begin(); node != block.nodes.end(); node++) {
-    float error = calc_error(*node);
+inline void Model::sgd(const Block &block) {
+  float const step_size = params.step_size;
+  float const lp = step_size * params.lp;
+  float const lq = step_size * params.lq;
 
-    int uid = node->user_id - 1;
-    int iid = node->item_id - 1;
-    for (int d = 0; d < params.dim; d++) {
+  for (const auto &node : block.nodes) {
+    int uid = node.user_id - 1;
+    int iid = node.item_id - 1;
+    float error = calc_error(uid, iid, node.rating) * step_size;
+    for (int d = 0, dim = params.dim; d < dim; d++) {
       float tmp_p_val = P[uid][d];
-      P[uid][d] += step_size * (error * Q[iid][d] - params.lp * P[uid][d]);
-      Q[iid][d] += step_size * (error * tmp_p_val - params.lq * Q[iid][d]);
+      P[uid][d] += error * Q[iid][d] - lp * P[uid][d];
+      Q[iid][d] += error * tmp_p_val - lq * Q[iid][d];
     }
   }
 }

@@ -9,7 +9,7 @@ RJSON_INCLUDE_FLAGS = -I$(RJSON_PATH)/include
 
 # assuming gcc with Cilk is on the PATH
 CXX := g++
-CFLAGS := -std=c++11 -funroll-loops -fcilkplus -lcilkrts -Wall
+CFLAGS := -O3 -std=c++11 -funroll-loops -fcilkplus -lcilkrts -Wall
 OBJ := matrix.o model.o tp_based_train.o timer.o logger.o
 
 all: mf

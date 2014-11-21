@@ -5,34 +5,32 @@
 namespace cpmf {
 namespace common {
 
-Model::Model(cpmf::Parameter &config_params, int const num_u, int const num_i)
-  : params(config_params), num_users(num_u), num_items(num_i) {
+Model::Model(const cpmf::Parameter &conf_params,
+              const int &num_u, const int &num_i)
+    : params(conf_params), num_users(num_u), num_items(num_i) {
   P.resize(num_users, std::vector<float> (params.dim) );
   Q.resize(num_items, std::vector<float> (params.dim) );
-  initialize(P);
-  initialize(Q);
+  initialize(P.data());
+  initialize(Q.data());
 }
 
-void Model::initialize(std::vector<std::vector<float>> &model_matrix) {
+void Model::initialize(std::vector<float> * column) {
   std::random_device rd;
   std::mt19937 mt(rd());
-  for (auto &columns : model_matrix) {
-    for (float &elem : columns) {
-      elem = mt() % 1000 / 1000.0;
-    }
+  for (auto elem = column->begin(), i_end = column->end();
+      elem != i_end; ++elem) {
+    *elem = mt() % 1000 / 1000.0;
   }
 }
 
-float Model::calc_rmse(std::shared_ptr<Matrix> R) {
-  double loss = 0;
-
-  for (Block block : R->blocks) {
-    for (Node node : block.nodes) {
-      float error = calc_error(node);
+float Model::calc_rmse(const std::shared_ptr<Matrix> R) {
+  double loss = 0.0;
+  for (const auto &block : R->blocks) {
+    for (const auto &node : block.nodes) {
+      float error = calc_error(node.user_id-1, node.item_id-1, node.rating);
       loss += error * error;
     }
   }
-
   return std::sqrt(loss/R->num_ratings);
 }
 
