@@ -53,11 +53,11 @@ class Model {
 
  private:
   void initialize(std::vector<float> * column);
-  inline float calc_error(const int &uid, const int &iid, const int &rate);
+  inline float calc_error(const int &uid, const int &iid, const float &rate);
 };
 
 inline float Model::calc_error(const int &uid, const int &iid,
-                                const int &rate) {
+                                const float &rate) {
   const std::vector<float> * p = &P[uid];
   const std::vector<float> * q = &Q[iid];
   return rate - std::inner_product(p->begin(), p->end(), q->begin(), 0.0);
