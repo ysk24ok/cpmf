@@ -1,12 +1,10 @@
-cpmf
+cpmf: Collection of Parallel Matrix Factorization
 ====
-
-Collection of Parallel Matrix Factorization
 
 This Library is under construction ...
 
 # Prerequisite
 
 ```
-git clone https://github.com/miloyip/rapidjson.git vendor/rapidjson
+git clone https://github.com/kazuho/picojson.git vendor/picojson
 ```

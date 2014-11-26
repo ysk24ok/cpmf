@@ -3,7 +3,9 @@
 
 #include <memory>
 #include <numeric>
+#include <string>
 #include <vector>
+
 #include <cpmf/config.hpp>
 
 namespace cpmf {
@@ -24,8 +26,7 @@ struct Block {
 
 class Matrix {
  public:
-  Matrix(const int &num_u_blks, const int &num_i_blks, FILE * fp_input);
-  ~Matrix();
+  Matrix(const cpmf::DataParams &data_params);
 
   int num_users, num_items, num_user_blocks, num_item_blocks;
   long num_ratings;
@@ -33,22 +34,24 @@ class Matrix {
 
  private:
   void initialize_blocks();
-  void read(FILE * fp_input, std::vector<Node> * temp_nodes);
+  void read(std::vector<Node> * temp_nodes);
   void assign_nodes(const std::vector<Node> &temp_nodes);
   void sort_nodes_by_user_id();
+
+  std::string input_path_;
+  std::string output_path_;
 };
 
 
 class Model {
  public:
-  Model(const cpmf::Parameter &conf_params, const int &num_u, const int &num_i);
-  ~Model();
+  Model(const cpmf::ModelParams &model_params,
+        const int &num_u, const int &num_i);
 
   float calc_rmse(const std::shared_ptr<Matrix> R);
   inline void sgd(const Block &block);
 
-  Parameter params;
-  int num_users, num_items;
+  cpmf::ModelParams params;
   std::vector<std::vector<float>> P, Q;
 
  private:

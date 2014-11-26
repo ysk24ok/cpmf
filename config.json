@@ -1,12 +1,21 @@
 {
-  "max_iter": 20,
-  "num_user_blocks": 4,
-  "num_item_blocks": 4,
+  "base": {
+    "max_iter": 20
+  },
 
-  "dimension": 40,
-  "step_size": 0.005,
-  "regularization_cost_for_P": 0.003,
-  "regularization_cost_for_Q": 0.003,
+  "model": {
+    "dimension": 40,
+    "step_size": 0.005,
+    "regularization_cost_for_P": 0.003,
+    "regularization_cost_for_Q": 0.003,
+    "input_path": "./model.bin",
+    "output_path": "./model.bin"
+  },
 
-  "input_path": "input/testdata"
+  "data": {
+    "num_user_blocks": 4,
+    "num_item_blocks": 4,
+    "input_path": "./input/testdata",
+    "output_path": "./input/testdata.bin"
+  }
 }

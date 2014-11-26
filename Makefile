@@ -1,11 +1,11 @@
 # cpmf
 CPMF_PATH = .
-CPMF_INCLUDE_FLAGS = -I$(CPMF_PATH)
+CPMF_INC_FLAGS = -I$(CPMF_PATH)
 DFLAGS = "-DTASK_PARALLEL"
 
-# rapidjson
-RJSON_PATH = $(CPMF_PATH)/vendor/rapidjson
-RJSON_INCLUDE_FLAGS = -I$(RJSON_PATH)/include
+# picojson
+PICO_PATH = $(CPMF_PATH)/vendor/picojson
+PICO_INC_FLAGS = -I$(PICO_PATH)
 
 # assuming gcc with Cilk is on the PATH
 CXX := g++
@@ -15,16 +15,16 @@ OBJ := matrix.o model.o tp_based_train.o timer.o logger.o
 all: mf
 
 %.o: cpmf/common/%.cpp cpmf/common/common.hpp
-	$(CXX) $(CFLAGS) $(CPMF_INCLUDE_FLAGS) -c -o $@ $<
+	$(CXX) $(CFLAGS) $(CPMF_INC_FLAGS) -c -o $@ $<
 
 %.o: cpmf/utils/%.cpp cpmf/utils/utils.hpp
-	$(CXX) $(CFLAGS) $(CPMF_INCLUDE_FLAGS) -c -o $@ $<
+	$(CXX) $(CFLAGS) $(CPMF_INC_FLAGS) -c -o $@ $<
 
 tp_based_train.o: cpmf/parallel/task_parallel_based/train.cpp cpmf/common/common.hpp
-	$(CXX) $(CFLAGS) $(CPMF_INCLUDE_FLAGS) $(CILK_INCLUDE_FLAGS) -c -o $@ $<
+	$(CXX) $(CFLAGS) $(CPMF_INC_FLAGS) $(CILK_INC_FLAGS) -c -o $@ $<
 
 mf: cpmf/main.cpp $(OBJ) cpmf/common/common.hpp
-	$(CXX) $(CFLAGS) $(RJSON_INCLUDE_FLAGS) $(CPMF_INCLUDE_FLAGS) $(DFLAGS) -o $@ $<
+	$(CXX) $(CFLAGS) $(PICO_INC_FLAGS) $(CPMF_INC_FLAGS) $(DFLAGS) -o $@ $<
 
 .PHONY: clean
 clean:
