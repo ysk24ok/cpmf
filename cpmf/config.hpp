@@ -5,22 +5,40 @@
 
 namespace cpmf {
 
-struct Parameter {
-  Parameter() : dim(40), lp(1), lq(1), step_size(0.005) {}
+struct ModelParams {
+  ModelParams() :
+    dim(40), lp(1), lq(1), step_size(0.005),
+    input_path("./model.bin"), output_path("./model.bin") {}
 
   int dim;
   float lp, lq, step_size;
+  std::string input_path, output_path;
+};
+
+struct DataParams {
+  DataParams() :
+    num_user_blocks(1), num_item_blocks(1),
+    input_path("./input/testdata"),
+    output_path("./output/testdata.bin") {}
+
+  int num_user_blocks, num_item_blocks;
+  std::string input_path, output_path;
+};
+
+struct BaseParams {
+  BaseParams() : max_iter(10) {};
+
+  int max_iter;
 };
 
 struct Config {
   Config() :
-    max_iter(10), num_user_blocks(1), num_item_blocks(1),
-    parallel_method("task based"), input_path("./input/testdata"),
-    params() {}
+    base_params(BaseParams()), model_params(ModelParams()),
+    data_params(DataParams()) {}
 
-  int max_iter, num_user_blocks, num_item_blocks;
-  std::string parallel_method, input_path;
-  Parameter params;
+  BaseParams base_params;
+  ModelParams model_params;
+  DataParams data_params;
 };
 
 } // namespace cpmf

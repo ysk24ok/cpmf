@@ -5,11 +5,11 @@
 namespace cpmf {
 namespace common {
 
-Model::Model(const cpmf::Parameter &conf_params,
+Model::Model(const cpmf::ModelParams &model_params,
               const int &num_u, const int &num_i)
-    : params(conf_params), num_users(num_u), num_items(num_i) {
-  P.resize(num_users, std::vector<float> (params.dim) );
-  Q.resize(num_items, std::vector<float> (params.dim) );
+    : params(model_params) {
+  P.resize(num_u, std::vector<float> (params.dim) );
+  Q.resize(num_i, std::vector<float> (params.dim) );
   initialize(P.data());
   initialize(Q.data());
 }
@@ -33,8 +33,6 @@ float Model::calc_rmse(const std::shared_ptr<Matrix> R) {
   }
   return std::sqrt(loss/R->num_ratings);
 }
-
-Model::~Model() {}
 
 
 } // namespace common
