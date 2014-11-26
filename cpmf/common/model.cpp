@@ -1,5 +1,6 @@
 #include <cmath>
 #include <random>
+
 #include "common.hpp"
 
 namespace cpmf {
@@ -10,16 +11,19 @@ Model::Model(const cpmf::ModelParams &model_params,
     : params(model_params) {
   P.resize(num_u, std::vector<float> (params.dim) );
   Q.resize(num_i, std::vector<float> (params.dim) );
-  initialize(P.data());
-  initialize(Q.data());
+  initialize(&P);
+  initialize(&Q);
 }
 
-void Model::initialize(std::vector<float> * column) {
+void Model::initialize(std::vector<std::vector<float>> * submatrix) {
   std::random_device rd;
   std::mt19937 mt(rd());
-  for (auto elem = column->begin(), i_end = column->end();
-      elem != i_end; ++elem) {
-    *elem = mt() % 1000 / 1000.0;
+  for (int i = 0; i < static_cast<int>(submatrix->size()); i++) {
+    std::vector<float> * column = &(*submatrix)[i];
+    for (auto elem = (*column).begin(), elem_end = (*column).end();
+         elem != elem_end; ++elem) {
+      *elem = mt() % 1000 / 1000.0;
+    }
   }
 }
 

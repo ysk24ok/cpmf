@@ -55,7 +55,7 @@ class Model {
   std::vector<std::vector<float>> P, Q;
 
  private:
-  void initialize(std::vector<float> * column);
+  void initialize(std::vector<std::vector<float>> * submatrix);
   inline float calc_error(const int &uid, const int &iid, const float &rate);
 };
 
