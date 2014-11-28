@@ -1,5 +1,5 @@
-#ifndef CPMF_CORE_HPP_
-#define CPMF_CORE_HPP_
+#ifndef CPMF_COMMON_HPP_
+#define CPMF_COMMON_HPP_
 
 #include <memory>
 #include <numeric>
@@ -86,4 +86,4 @@ inline void Model::sgd(const Block &block) {
 } // namespace common
 } // namespace cpmf
 
-#endif // CPMF_CORE_HPP_
+#endif // CPMF_COMMON_HPP_

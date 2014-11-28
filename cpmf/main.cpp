@@ -13,8 +13,11 @@
 
 #include <picojson.h>
 
-#if defined TASK_PARALLEL
+#if defined TASK_PARALLEL_BASED
 #include <cpmf/parallel/task_parallel_based/train.cpp>
+using namespace cpmf::parallel::task_parallel_based;
+#elif defined LINE_BASED
+#elif defined ROTATION_BASED
 #endif
 
 
@@ -130,8 +133,7 @@ int main(int argc, char *argv[]) {
   timer.stop("ends.");
 
   // begin training
-  cpmf::parallel::task_parallel_based::train(R, model,
-                                             config->base_params.max_iter);
+  train(R, model, config->base_params.max_iter);
 
   return EXIT_SUCCESS;
 }
