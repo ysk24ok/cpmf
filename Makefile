@@ -17,9 +17,14 @@ ifeq ($(PARALLEL_FLAGS), -DTASK_PARALLEL_BASED)
 	# add task-parallel dependent CFLAGS
 	ifeq ($(TP_FLAGS), -DTP_CILK)
 		DFLAGS := -fcilkplus -lcilkrts
+		TP_INC_FLAGS =
+		TP_LIB_FLAGS =
 	endif
 	ifeq ($(TP_FLAGS), -DTP_MYTH)
 		DFLAGS := -lmyth-native -ldr
+		MYTH_PATH = ./vendor/massivethreads
+		TP_INC_FLAGS = -I$(MYTH_PATH)/include
+		TP_LIB_FLAGS = -L$(MYTH_PATH)/lib -Wl,-R$(MYTH_PATH)/lib
 	endif
 
 else
@@ -42,10 +47,10 @@ all: mf
 	$(CXX) $(CFLAGS) $(CPMF_INC_FLAGS) -c -o $@ $<
 
 tp_based_train.o: cpmf/parallel/task_parallel_based/train.cpp
-	$(CXX) $(CFLAGS) $(DFLAGS) $(CPMF_INC_FLAGS) $(TP_FLAGS) -c -o $@ $<
+	$(CXX) $(CFLAGS) $(DFLAGS) $(TP_INC_FLAGS) $(CPMF_INC_FLAGS) $(TP_LIB_FLAGS) $(TP_FLAGS) -c -o $@ $<
 
 mf: cpmf/main.cpp $(OBJ)
-	$(CXX) $(CFLAGS) $(DFLAGS) $(PICO_INC_FLAGS) $(CPMF_INC_FLAGS) $(PARALLEL_FLAGS) $(TP_FLAGS) -o $@ $<
+	$(CXX) $(CFLAGS) $(DFLAGS) $(TP_INC_FLAGS) $(PICO_INC_FLAGS) $(CPMF_INC_FLAGS) $(PARALLEL_FLAGS) $(TP_FLAGS) $(TP_LIB_FLAGS) -o $@ $<
 
 
 clean:
