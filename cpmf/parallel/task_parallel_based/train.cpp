@@ -9,19 +9,19 @@ namespace cpmf {
 namespace parallel {
 namespace task_parallel_based {
 
-void divide(std::shared_ptr<cpmf::common::Matrix> const R,
+void divide(const std::shared_ptr<cpmf::common::Matrix> R,
             std::shared_ptr<cpmf::common::Model> model,
-            int const block_length,
-            int const initial_user_id, int const initial_item_id) {
-  int const half_len = block_length / 2;
+            const int &block_length,
+            const int &initial_user_id, const int &initial_item_id) {
+  const int half_len = block_length / 2;
   if (half_len == 0) {
-    int const block_id = initial_user_id * R->num_user_blocks + initial_item_id;
+    const int block_id = initial_user_id * R->num_item_blocks + initial_item_id;
     model->sgd(R->blocks[block_id]);
     return;
   }
 
-  int const boundary_uid = initial_user_id + half_len;
-  int const boundary_iid = initial_item_id + half_len;
+  const int boundary_uid = initial_user_id + half_len;
+  const int boundary_iid = initial_item_id + half_len;
 
   // spawn tasks on the same diagonal line
   mk_task_group;
@@ -33,27 +33,27 @@ void divide(std::shared_ptr<cpmf::common::Matrix> const R,
   cpmf_sync;
 }
 
-void train(std::shared_ptr<cpmf::common::Matrix> const R,
+void train(const std::shared_ptr<cpmf::common::Matrix> R,
            std::shared_ptr<cpmf::common::Model> model,
-           int const max_iter) {
+           const cpmf::BaseParams &base_params) {
   cpmf::utils::Timer timer;
   cpmf::utils::Logger logger;
   mk_task_group;
 
   timer.start("Now iteration starts...");
   logger.put_table_header("iteration", 2, "time", "RMSE");
-  for (int iter = 1; iter <= max_iter; iter++) {
-    timer.resume();
+  for (int iter = 1; iter <= base_params.max_iter; iter++) {
     // TODO: Here, assume the num_user_blocks and num_item_blocks are equal
     cpmf_spawn( divide(R, model, R->num_user_blocks, 0, 0) );
     cpmf_sync;
     float iter_time = timer.pause();
     float rmse = model->calc_rmse(R);
     logger.put_table_row(iter, 2, iter_time, rmse);
+    timer.resume();
   }
   timer.stop("ends.");
 }
 
-} // namespace task_based
-} // namespace train
+} // namespace task_parallel_based
+} // namespace parallel
 } // namespace cpmf

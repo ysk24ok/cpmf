@@ -51,7 +51,7 @@ std::unique_ptr<cpmf::Config> parse_config_json(std::ifstream &conf_ifs) {
           bp.max_iter = static_cast<int>( val.get<double>() );
         }
 
-      } else if (type == "base") {
+      } else if (type == "model") {
         if (key == "dimension") {
           mp.dim = static_cast<int>( val.get<double>() );
         } else if (key == "step_size") {
@@ -133,7 +133,7 @@ int main(int argc, char *argv[]) {
   timer.stop("ends.");
 
   // begin training
-  train(R, model, config->base_params.max_iter);
+  train(R, model, config->base_params);
 
   return EXIT_SUCCESS;
 }
