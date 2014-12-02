@@ -5,6 +5,12 @@
 
 namespace cpmf {
 
+struct BaseParams {
+  BaseParams() : max_iter(10), num_threads(4) {};
+
+  int max_iter, num_threads;
+};
+
 struct ModelParams {
   ModelParams() :
     dim(40), lp(1), lq(1), step_size(0.005),
@@ -23,12 +29,6 @@ struct DataParams {
 
   int num_user_blocks, num_item_blocks;
   std::string input_path, output_path;
-};
-
-struct BaseParams {
-  BaseParams() : max_iter(10) {};
-
-  int max_iter;
 };
 
 struct Config {

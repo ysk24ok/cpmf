@@ -1,6 +1,7 @@
 {
   "base": {
-    "max_iter": 20
+    "max_iter": 20,
+    "num_threads": 4
   },
 
   "model": {
