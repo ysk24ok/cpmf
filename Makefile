@@ -8,6 +8,7 @@ CPMF_INC_FLAGS = -I$(CPMF_PATH)
 PARALLEL_FLAGS = -DTASK_PARALLEL_BASED
 # PARALLEL_FLAGS = -DLINE_BASED
 # PARALLEL_FLAGS = -DROTATION_BASED
+# PARALLEL_FLAGS = -DFPSGD
 
 # which task parallel library to use
 ifeq ($(PARALLEL_FLAGS), -DTASK_PARALLEL_BASED)
@@ -35,7 +36,7 @@ endif
 PICO_PATH = $(CPMF_PATH)/vendor/picojson
 PICO_INC_FLAGS = -I$(PICO_PATH)
 
-OBJ := matrix.o model.o tp_based_train.o timer.o logger.o
+OBJ := matrix.o model.o train.o timer.o logger.o
 
 .PHONY: all clean
 all: mf
@@ -46,11 +47,21 @@ all: mf
 %.o: cpmf/utils/%.cpp
 	$(CXX) $(CFLAGS) $(CPMF_INC_FLAGS) -c -o $@ $<
 
-tp_based_train.o: cpmf/parallel/task_parallel_based/train.cpp
-	$(CXX) $(CFLAGS) $(DFLAGS) $(TP_INC_FLAGS) $(CPMF_INC_FLAGS) $(TP_LIB_FLAGS) $(TP_FLAGS) -c -o $@ $<
+# train.cpp for task_parallel_based
+ifeq ($(PARALLEL_FLAGS), -DTASK_PARALLEL_BASED)
+train.o: cpmf/parallel/task_parallel_based/train.cpp
+	$(CXX) $(CFLAGS) $(DFLAGS) $(TP_INC_FLAGS) $(CPMF_INC_FLAGS) \
+		$(TP_LIB_FLAGS) $(TP_FLAGS) -c -o $@ $<
+endif
+# train.cpp for fpsgd
+ifeq ($(PARALLEL_FLAGS), -DFPSGD)
+train.o: cpmf/parallel/fpsgd/train.cpp cpmf/parallel/fpsgd/scheduler.cpp
+	$(CXX) $(CFLAGS) $(DFLAGS) $(CPMF_INC_FLAGS) -c -o $@ $<
+endif
 
 mf: cpmf/main.cpp $(OBJ)
-	$(CXX) $(CFLAGS) $(DFLAGS) $(TP_INC_FLAGS) $(PICO_INC_FLAGS) $(CPMF_INC_FLAGS) $(PARALLEL_FLAGS) $(TP_FLAGS) $(TP_LIB_FLAGS) -o $@ $<
+	$(CXX) $(CFLAGS) $(DFLAGS) $(TP_INC_FLAGS) $(PICO_INC_FLAGS) \
+		$(CPMF_INC_FLAGS) $(PARALLEL_FLAGS) $(TP_FLAGS) $(TP_LIB_FLAGS) -o $@ $<
 
 
 clean:

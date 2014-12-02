@@ -16,8 +16,15 @@
 #if defined TASK_PARALLEL_BASED
 #include <cpmf/parallel/task_parallel_based/train.cpp>
 using namespace cpmf::parallel::task_parallel_based;
+
 #elif defined LINE_BASED
+
 #elif defined ROTATION_BASED
+
+#elif defined FPSGD
+#include <cpmf/parallel/fpsgd/train.cpp>
+using namespace cpmf::parallel::fpsgd;
+
 #endif
 
 
@@ -49,6 +56,8 @@ std::unique_ptr<cpmf::Config> parse_config_json(std::ifstream &conf_ifs) {
       if (type == "base") {
         if (key == "max_iter") {
           bp.max_iter = static_cast<int>( val.get<double>() );
+        } else if(key == "num_threads") {
+          bp.num_threads = static_cast<int>( val.get<double>() );
         }
 
       } else if (type == "model") {
