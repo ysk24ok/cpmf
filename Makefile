@@ -53,6 +53,11 @@ train.o: cpmf/parallel/task_parallel_based/train.cpp
 	$(CXX) $(CFLAGS) $(DFLAGS) $(TP_INC_FLAGS) $(CPMF_INC_FLAGS) \
 		$(TP_LIB_FLAGS) $(TP_FLAGS) -c -o $@ $<
 endif
+# train.cpp for line_based
+ifeq ($(PARALLEL_FLAGS), -DLINE_BASED)
+train.o: cpmf/parallel/line_based/train.cpp cpmf/parallel/line_based/scheduler.cpp
+	$(CXX) $(CFLAGS) $(DFLAGS) $(CPMF_INC_FLAGS) -c -o $@ $<
+endif
 # train.cpp for fpsgd
 ifeq ($(PARALLEL_FLAGS), -DFPSGD)
 train.o: cpmf/parallel/fpsgd/train.cpp cpmf/parallel/fpsgd/scheduler.cpp
