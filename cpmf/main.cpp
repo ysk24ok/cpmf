@@ -18,6 +18,8 @@
 using namespace cpmf::parallel::task_parallel_based;
 
 #elif defined LINE_BASED
+#include <cpmf/parallel/line_based/train.cpp>
+using namespace cpmf::parallel::line_based;
 
 #elif defined ROTATION_BASED
 
