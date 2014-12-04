@@ -135,6 +135,7 @@ int main(int argc, char *argv[]) {
   std::shared_ptr<cpmf::common::Matrix> R(new cpmf::common::Matrix(
                                             config->data_params));
   timer.stop("ends.");
+  R->show_info();
 
   // initialize model
   timer.start("Now initializing model...");

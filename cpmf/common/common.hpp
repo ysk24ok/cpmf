@@ -27,6 +27,7 @@ struct Block {
 class Matrix {
  public:
   Matrix(const cpmf::DataParams &data_params);
+  void show_info();
 
   int num_users, num_items, num_user_blocks, num_item_blocks;
   long num_ratings;
@@ -60,7 +61,7 @@ class Model {
 };
 
 inline float Model::calc_error(const int &uid, const int &iid,
-                                const float &rate) {
+                               const float &rate) {
   const std::vector<float> * p = &P[uid];
   const std::vector<float> * q = &Q[iid];
   return rate - std::inner_product(p->begin(), p->end(), q->begin(), 0.0);
