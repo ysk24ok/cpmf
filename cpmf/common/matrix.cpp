@@ -17,7 +17,12 @@ Matrix::Matrix(const cpmf::DataParams &data_params)
 
   std::vector<Node> temp_nodes;
   read(&temp_nodes);
-  assign_nodes(temp_nodes);
+
+  std::vector<int> user_mapping(num_users, 0);
+  std::vector<int> item_mapping(num_items, 0);
+  generate_mapping_vector(&user_mapping, data_params.randomize);
+  generate_mapping_vector(&item_mapping, data_params.randomize);
+  assign_nodes(&temp_nodes, user_mapping, item_mapping);
 
   sort_nodes_by_user_id();
 }
@@ -41,23 +46,37 @@ void Matrix::read(std::vector<Node> * temp_nodes) {
   while (getline(input_ifs, line_buf)) {
     Node node;
     sscanf(line_buf.data(),
-           "%d %d %f\n", &node.user_id, &node.item_id, &node.rating);
-    if (node.user_id > num_users) num_users = node.user_id;
-    if (node.item_id > num_items) num_items = node.item_id;
+           "%d %d %f\n", &node.orig_user_id, &node.orig_item_id, &node.rating);
+    if (node.orig_user_id > num_users) { num_users = node.orig_user_id; }
+    if (node.orig_item_id > num_items) { num_items = node.orig_item_id; }
     ++num_ratings;
     temp_nodes->push_back(node);
   }
 }
 
-void Matrix::assign_nodes(const std::vector<Node> &temp_nodes) {
-  const int blk_u_len = (int) ceil((float) num_users / num_user_blocks);
-  const int blk_i_len = (int) ceil((float) num_items / num_item_blocks);
+void Matrix::generate_mapping_vector(std::vector<int> * mapping_vec,
+                                     bool randomize) {
+  const int size = mapping_vec->size();
+  for (int i = 0; i < size; i++) { mapping_vec->at(i) = i+1; }
+  if (randomize) {
+    std::random_shuffle(mapping_vec->begin(), mapping_vec->end());
+  }
+}
 
-  for (const auto &node : temp_nodes) {
-    int blk_u_id = (node.user_id - 1) / blk_u_len;
-    int blk_i_id = (node.item_id - 1) / blk_i_len;
+void Matrix::assign_nodes(std::vector<Node> * temp_nodes,
+                          const std::vector<int> &user_mapping,
+                          const std::vector<int> &item_mapping) {
+  const int blk_u_len = num_users / num_user_blocks + 1;
+  const int blk_i_len = num_items / num_item_blocks + 1;
+
+  for (auto node_itr = temp_nodes->begin(), node_itr_end = temp_nodes->end();
+        node_itr != node_itr_end; ++node_itr) {
+    node_itr->user_id = user_mapping[node_itr->orig_user_id - 1];
+    node_itr->item_id = item_mapping[node_itr->orig_item_id - 1];
+    int blk_u_id = (node_itr->user_id - 1) / blk_u_len;
+    int blk_i_id = (node_itr->item_id - 1) / blk_i_len;
     int blk_id = blk_u_id * num_item_blocks + blk_i_id;
-    blocks[blk_id].nodes.push_back(node);
+    blocks[blk_id].nodes.push_back(*node_itr);
   }
 }
 

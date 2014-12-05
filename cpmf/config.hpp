@@ -24,10 +24,11 @@ struct ModelParams {
 struct DataParams {
   DataParams() :
     num_user_blocks(1), num_item_blocks(1),
-    input_path("./input/testdata"),
-    output_path("./output/testdata.bin") {}
+    randomize(false),
+    input_path("./input/testdata"), output_path("./output/testdata.bin") {}
 
   int num_user_blocks, num_item_blocks;
+  bool randomize;
   std::string input_path, output_path;
 };
 

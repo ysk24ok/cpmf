@@ -48,10 +48,10 @@ std::unique_ptr<cpmf::Config> parse_config_json(std::ifstream &conf_ifs) {
   cpmf::ModelParams mp;
   cpmf::DataParams dp;
   const picojson::value::object &obj = v.get<picojson::object>();
-  for (auto i = obj.begin(); i != obj.end(); ++i) {
+  for (auto i = obj.begin(), i_end = obj.end(); i != i_end; ++i) {
     std::string type = i->first;
     const picojson::value::object &subobj = i->second.get<picojson::object>();
-    for (auto j = subobj.begin(), i_end = subobj.end(); j != i_end; ++j) {
+    for (auto j = subobj.begin(), j_end = subobj.end(); j != j_end; ++j) {
       std::string key = j->first;
       const picojson::value &val = j->second;
 
@@ -86,8 +86,9 @@ std::unique_ptr<cpmf::Config> parse_config_json(std::ifstream &conf_ifs) {
           dp.input_path = val.get<std::string>();
         } else if (key == "output_path") {
           dp.output_path = val.get<std::string>();
+        } else if (key == "randomize") {
+          dp.randomize = val.get<bool>();
         }
-
       }
     }
   }

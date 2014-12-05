@@ -12,8 +12,9 @@ namespace cpmf {
 namespace common {
 
 struct Node {
-  Node() : user_id(0), item_id(0), rating(0) {}
-  int user_id, item_id;
+  Node()
+    : user_id(0), item_id(0), orig_user_id(0), orig_item_id(0), rating(0.0) {}
+  int user_id, item_id, orig_user_id, orig_item_id;
   float rating;
 };
 
@@ -36,7 +37,10 @@ class Matrix {
  private:
   void initialize_blocks();
   void read(std::vector<Node> * temp_nodes);
-  void assign_nodes(const std::vector<Node> &temp_nodes);
+  void generate_mapping_vector(std::vector<int> * mapping_vec, bool randomize);
+  void assign_nodes(std::vector<Node> * temp_nodes,
+                    const std::vector<int> &user_mapping,
+                    const std::vector<int> &item_mapping);
   void sort_nodes_by_user_id();
 
   std::string input_path_;
