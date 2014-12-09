@@ -34,8 +34,8 @@ Users can designate the parallel method by `PARALLEL_FLAGS` in Makefile.
   and multiple threads work on blocks not to share the same row or column.  
   Our *cpmf* was developed to overcome the scalability problem of FPSGD.
   
-  If you want to use *fpsgd* method,
-  specify `PARALLEL_FLAGS = -DTASK_PARALLEL_BASED`.
+  If you want to use *fpsgd* method,  
+  specify `PARALLEL_FLAGS = -DTASK_PARALLEL_BASED`.  
   
 * *task parallel based* (by *Intel Cilk* or *MassiveThreads*)
 
@@ -43,10 +43,10 @@ Users can designate the parallel method by `PARALLEL_FLAGS` in Makefile.
   by recursively dividing the rating matrix into 4 smaller blocks  
   and dynamically assigning the created tasks (blocks) to threads.  
   
-  If you want to use *task parallel based* method,
+  If you want to use *task parallel based* method,  
   specify `PARALLEL_FLAGS = -DTASK_PARALLEL_BASED`.
 
-  To decide which task parallel library to use, you can set as follows:
+  To decide which task parallel library to use, you can set as follows:  
   `TP_FLAGS = -DTP_CILK` for *Intel Cilk* or  
   `TP_FLAGS = -DTP_MYTH` for *MassiveThreads*.
 
@@ -55,7 +55,7 @@ Users can designate the parallel method by `PARALLEL_FLAGS` in Makefile.
   *line_based* is a more cache-friendly method for matrix factorization.  
   Threads work on blocks whose row or column is shared by the previous one.
   
-  If you want to use *line based* method,
+  If you want to use *line based* method,  
   specify `PARALLEL_FLAGS = -DTASK_PARALLEL_BASED`.
 
 * *rotation based*
