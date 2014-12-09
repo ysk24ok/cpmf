@@ -1,26 +1,29 @@
 # It is assumed gcc with Cilk is on the $PATH
 CXX := g++
-CFLAGS := -O3 -std=c++11 -funroll-loops
+CFLAGS := -O3 -std=c++11 -funroll-loops -lpthread
 
-# cpmf
+# flags for cpmf
 CPMF_PATH = .
 CPMF_INC_FLAGS = -I$(CPMF_PATH)
+
+# HERE, USERS HAVE TO DESIGNATE THE PARALLEL METHOD
+# PARALLEL_FLAGS = -DFPSGD
 PARALLEL_FLAGS = -DTASK_PARALLEL_BASED
 # PARALLEL_FLAGS = -DLINE_BASED
 # PARALLEL_FLAGS = -DROTATION_BASED
-# PARALLEL_FLAGS = -DFPSGD
 
 # which task parallel library to use
 ifeq ($(PARALLEL_FLAGS), -DTASK_PARALLEL_BASED)
 	TP_FLAGS = -DTP_CILK
 	# TP_FLAGS = -DTP_MYTH
 
-	# add task-parallel dependent CFLAGS
+	# for Cilk
 	ifeq ($(TP_FLAGS), -DTP_CILK)
 		DFLAGS := -fcilkplus -lcilkrts
 		TP_INC_FLAGS =
 		TP_LIB_FLAGS =
 	endif
+	# for MassiveThreads
 	ifeq ($(TP_FLAGS), -DTP_MYTH)
 		DFLAGS := -lmyth-native -ldr
 		MYTH_PATH = ./vendor/massivethreads
@@ -32,7 +35,7 @@ else
 	TP_FLAGS =
 endif
 
-# picojson
+# flags for picojson
 PICO_PATH = $(CPMF_PATH)/vendor/picojson
 PICO_INC_FLAGS = -I$(PICO_PATH)
 
@@ -41,10 +44,10 @@ OBJ := matrix.o model.o train.o timer.o logger.o
 .PHONY: all clean
 all: mf
 
-%.o: cpmf/common/%.cpp
+%.o: cpmf/common/%.cpp cpmf/common/common.hpp
 	$(CXX) $(CFLAGS) $(CPMF_INC_FLAGS) -c -o $@ $<
 
-%.o: cpmf/utils/%.cpp
+%.o: cpmf/utils/%.cpp cpmf/utils/utils.hpp
 	$(CXX) $(CFLAGS) $(CPMF_INC_FLAGS) -c -o $@ $<
 
 # train.cpp for task_parallel_based
