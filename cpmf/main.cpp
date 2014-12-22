@@ -21,10 +21,10 @@ using namespace cpmf::parallel::task_parallel_based;
 #include <cpmf/parallel/line_based/train.cpp>
 using namespace cpmf::parallel::line_based;
 
-#elif defined ROTATION_BASED
-
 #elif defined FPSGD
 #include <cpmf/parallel/fpsgd/train.cpp>
+#include <cpmf/parallel/fpsgd/scheduler.cpp>
+#include <cpmf/parallel/fpsgd/thread_pool.cpp>
 using namespace cpmf::parallel::fpsgd;
 
 #endif
