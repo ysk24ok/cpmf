@@ -51,8 +51,8 @@ all: mf
 
 # for tp_based
 ifeq ($(PARALLEL_FLAGS), -DTP_BASED)
-OBJ += train.o
-train.o: cpmf/parallel/tp_based/train.cpp
+OBJ += train.o scheduler.o
+%.o: cpmf/parallel/tp_based/%.cpp cpmf/parallel/tp_based/tp_based.hpp
 	$(CXX) $(CFLAGS) $(DFLAGS) $(TP_INC_FLAGS) $(CPMF_INC_FLAGS) \
 		$(TP_LIB_FLAGS) $(TP_FLAGS) -c -o $@ $<
 endif

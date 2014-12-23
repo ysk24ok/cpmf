@@ -15,6 +15,7 @@
 
 #if defined TP_BASED
 #include <cpmf/parallel/tp_based/train.cpp>
+#include <cpmf/parallel/tp_based/scheduler.cpp>
 using namespace cpmf::parallel::tp_based;
 
 #elif defined LINE_BASED
