@@ -59,8 +59,8 @@ endif
 
 # for line_based
 ifeq ($(PARALLEL_FLAGS), -DLINE_BASED)
-OBJ += train.o
-train.o: cpmf/parallel/line_based/train.cpp cpmf/parallel/line_based/scheduler.cpp
+OBJ += train.o scheduler.o thread_pool.o
+%.o: cpmf/parallel/line_based/%.cpp cpmf/parallel/line_based/line_based.hpp
 	$(CXX) $(CFLAGS) $(DFLAGS) $(CPMF_INC_FLAGS) -c -o $@ $<
 endif
 
