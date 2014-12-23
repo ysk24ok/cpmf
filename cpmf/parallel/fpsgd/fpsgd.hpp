@@ -27,19 +27,17 @@ class Scheduler {
         free_user_blocks_(num_u_blks, true),
         free_item_blocks_(num_i_blks, true),
         processed_counts_(num_u_blks * num_i_blks, 0),
-        threads_(num_thrs) {}
+        threads_(num_thrs), engine_(rd_()) {}
     ~ThreadPool();
     void set_parent_ptr(Scheduler * scheduler);
     void initialize(const std::shared_ptr<cpmf::common::Matrix> R,
                     std::shared_ptr<cpmf::common::Model> model);
-    void run(const std::shared_ptr<cpmf::common::Matrix> R,
-             std::shared_ptr<cpmf::common::Model> model);
-    void resume();
-    void terminate();
 
     bool all_threads_stopped;
 
    private:
+    void run(const std::shared_ptr<cpmf::common::Matrix> R,
+             std::shared_ptr<cpmf::common::Model> model);
     int get_free_block_id();
     void after_processed(const int &block_id);
     void wait_till_resumed();
@@ -60,7 +58,7 @@ class Scheduler {
     : is_paused_(false), is_terminated_(false),
       tp(num_u_blks, num_i_blks, num_thrs) {}
   void start(const std::shared_ptr<cpmf::common::Matrix> R,
-                  std::shared_ptr<cpmf::common::Model> model);
+             std::shared_ptr<cpmf::common::Model> model);
   void wait_for_all_blocks_processed();
   void resume();
   void terminate();
@@ -71,7 +69,6 @@ class Scheduler {
   std::condition_variable cond_;
   ThreadPool tp;
 };
-
 
 } // namespace fpsgd
 } // namespace parallel

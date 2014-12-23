@@ -93,7 +93,7 @@ bool Scheduler::ThreadPool::is_terminated() {
   if (!parent->is_terminated_) { return false; }
   {
     std::lock_guard<std::mutex> lock(parent->mtx_);
-    // notify Scheduler::terminate(
+    // notify Scheduler::terminate()
     if (++num_stopped_threads_ == num_threads_) {
       all_threads_stopped = true;
       parent->cond_.notify_one();
