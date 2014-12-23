@@ -7,7 +7,7 @@
 
 namespace cpmf {
 namespace parallel {
-namespace task_parallel_based {
+namespace tp_based {
 
 void divide(const std::shared_ptr<cpmf::common::Matrix> R,
             std::shared_ptr<cpmf::common::Model> model,
@@ -54,6 +54,6 @@ void train(const std::shared_ptr<cpmf::common::Matrix> R,
   timer.stop("ends.");
 }
 
-} // namespace task_parallel_based
+} // namespace tp_based
 } // namespace parallel
 } // namespace cpmf

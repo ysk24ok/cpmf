@@ -1,5 +1,5 @@
-#ifndef CPMF_TP_SWITCH_
-#define CPMF_TP_SWITCH_
+#ifndef CPMF_PARALLEL_TP_SWITCH_HPP_
+#define CPMF_PARALLEL_TP_SWITCH_HPP_
 
 // for Cilk
 #if defined TP_CILK
@@ -16,4 +16,4 @@
 # define cpmf_sync __tg__.wait()
 #endif
 
-#endif
+#endif // CPMF_PARALLEL_TP_SWITCH_HPP_

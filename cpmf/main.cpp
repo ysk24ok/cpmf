@@ -13,9 +13,9 @@
 
 #include <picojson.h>
 
-#if defined TASK_PARALLEL_BASED
-#include <cpmf/parallel/task_parallel_based/train.cpp>
-using namespace cpmf::parallel::task_parallel_based;
+#if defined TP_BASED
+#include <cpmf/parallel/tp_based/train.cpp>
+using namespace cpmf::parallel::tp_based;
 
 #elif defined LINE_BASED
 #include <cpmf/parallel/line_based/train.cpp>

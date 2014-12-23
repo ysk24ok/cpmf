@@ -8,11 +8,11 @@ CPMF_INC_FLAGS = -I$(CPMF_PATH)
 
 # HERE, USERS HAVE TO DESIGNATE THE PARALLEL METHOD
 # PARALLEL_FLAGS = -DFPSGD
-PARALLEL_FLAGS = -DTASK_PARALLEL_BASED
+PARALLEL_FLAGS = -DTP_BASED
 # PARALLEL_FLAGS = -DLINE_BASED
 
 # which task parallel library to use
-ifeq ($(PARALLEL_FLAGS), -DTASK_PARALLEL_BASED)
+ifeq ($(PARALLEL_FLAGS), -DTP_BASED)
 TP_FLAGS = -DTP_CILK
 # TP_FLAGS = -DTP_MYTH
 
@@ -49,10 +49,10 @@ all: mf
 %.o: cpmf/utils/%.cpp cpmf/utils/utils.hpp
 	$(CXX) $(CFLAGS) $(CPMF_INC_FLAGS) -c -o $@ $<
 
-# for task_parallel_based
-ifeq ($(PARALLEL_FLAGS), -DTASK_PARALLEL_BASED)
+# for tp_based
+ifeq ($(PARALLEL_FLAGS), -DTP_BASED)
 OBJ += train.o
-train.o: cpmf/parallel/task_parallel_based/train.cpp
+train.o: cpmf/parallel/tp_based/train.cpp
 	$(CXX) $(CFLAGS) $(DFLAGS) $(TP_INC_FLAGS) $(CPMF_INC_FLAGS) \
 		$(TP_LIB_FLAGS) $(TP_FLAGS) -c -o $@ $<
 endif
