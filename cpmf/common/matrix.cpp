@@ -8,7 +8,7 @@ namespace cpmf {
 namespace common {
 
 Matrix::Matrix(const cpmf::DataParams &data_params)
-    : num_users(0), num_items(0), num_ratings(0),
+    : num_ratings(0), num_users(0), num_items(0),
       num_user_blocks(data_params.num_user_blocks),
       num_item_blocks(data_params.num_item_blocks),
       input_path_(data_params.input_path),

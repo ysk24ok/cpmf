@@ -30,8 +30,8 @@ class Matrix {
   Matrix(const cpmf::DataParams &data_params);
   void show_info();
 
-  int num_users, num_items, num_user_blocks, num_item_blocks;
   long num_ratings;
+  int num_users, num_items, num_user_blocks, num_item_blocks;
   std::vector<Block> blocks;
 
  private:
