@@ -1,8 +1,5 @@
-#include <memory>
-
-#include <cpmf/common/common.hpp>
 #include <cpmf/utils/utils.hpp>
-#include "scheduler.cpp"
+#include "fpsgd.hpp"
 
 namespace cpmf {
 namespace parallel {
@@ -18,9 +15,9 @@ void train(const std::shared_ptr<cpmf::common::Matrix> R,
 
   timer.start("Now iteration starts...");
   logger.put_table_header("iteration", 2, "time", "RMSE");
-  scheduler.initialize_threads(R, model);
+  scheduler.start(R, model);
   for (int iter = 1; iter <= base_params.max_iter; iter++) {
-    scheduler.pause();
+    scheduler.wait_for_all_blocks_processed();
     float iter_time = timer.pause();
     float rmse = model->calc_rmse(R);
     logger.put_table_row(iter, 2, iter_time, rmse);
