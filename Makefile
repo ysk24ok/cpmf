@@ -1,79 +1,83 @@
 # It is assumed gcc with Cilk is on the $PATH
 CXX := g++
-CFLAGS := -O3 -std=c++11 -funroll-loops -lpthread
-
-# flags for cpmf
-CPMF_PATH = .
-CPMF_INC_FLAGS = -I$(CPMF_PATH)
+CFLAGS := -O3 -std=c++11 -funroll-loops -Wall
+DFLAGS =
+CPMF_PATH := .
+INCLUDE_FLAGS = -I$(CPMF_PATH)
+LIB_FLAGS =
 
 # HERE, USERS HAVE TO DESIGNATE THE PARALLEL METHOD
-# PARALLEL_FLAGS = -DFPSGD
-PARALLEL_FLAGS = -DTP_BASED
-# PARALLEL_FLAGS = -DLINE_BASED
+# DPARALLEL := -DFPSGD
+DPARALLEL := -DTP_BASED
+	# which task parallel library to use
+	DTP := -DTP_CILK
+	# DTP := -DTP_MYTH
+# DPARALLEL := -DLINE_BASED
 
-# which task parallel library to use
-ifeq ($(PARALLEL_FLAGS), -DTP_BASED)
-TP_FLAGS = -DTP_CILK
-# TP_FLAGS = -DTP_MYTH
+
+# for fpsgd and line_based
+TP_FLAGS := -lpthread
 
 # for Cilk
-ifeq ($(TP_FLAGS), -DTP_CILK)
-	DFLAGS := -fcilkplus -lcilkrts
-	TP_INC_FLAGS =
-	TP_LIB_FLAGS =
-endif
-# for MassiveThreads
-ifeq ($(TP_FLAGS), -DTP_MYTH)
-	DFLAGS := -lmyth-native -ldr
-	MYTH_PATH = ./vendor/massivethreads
-	TP_INC_FLAGS = -I$(MYTH_PATH)/include
-	TP_LIB_FLAGS = -L$(MYTH_PATH)/lib -Wl,-R$(MYTH_PATH)/lib
+ifeq ($(DTP), -DTP_CILK)
+TP_FLAGS := -fcilkplus -lcilkrts
 endif
 
-else
-	TP_FLAGS =
+# for MassiveThreads
+ifeq ($(DTP), -DTP_MYTH)
+TP_FLAGS := -lmyth-native -ldr
+MYTH_PATH = $(CPMF_PATH)/vendor/massivethreads
+INCLUDE_FLAGS += -I$(MYTH_PATH)/include
+LIB_FLAGS += -L$(MYTH_PATH)/lib -Wl,-R$(MYTH_PATH)/lib
 endif
 
 # for picojson
-PICO_PATH = $(CPMF_PATH)/vendor/picojson
-PICO_INC_FLAGS = -I$(PICO_PATH)
+PICO_PATH := $(CPMF_PATH)/vendor/picojson
+PICO_INC_FLAGS := -I$(PICO_PATH)
 
-OBJ := matrix.o model.o timer.o logger.o
+
+
+
+DFLAGS += $(DPARALLEL)
+DFLAGS += $(DTP)
+INCLUDE_FLAGS += $(LIB_FLAGS)
+OBJ := matrix.o model.o timer.o logger.o train.o
 
 .PHONY: all clean
 all: mf
 
 %.o: cpmf/common/%.cpp cpmf/common/common.hpp
-	$(CXX) $(CFLAGS) $(CPMF_INC_FLAGS) -c -o $@ $<
+	$(CXX) $(CFLAGS) $(INCLUDE_FLAGS) -c -o $@ $<
 
 %.o: cpmf/utils/%.cpp cpmf/utils/utils.hpp
-	$(CXX) $(CFLAGS) $(CPMF_INC_FLAGS) -c -o $@ $<
+	$(CXX) $(CFLAGS) $(INCLUDE_FLAGS) -c -o $@ $<
+
+train.o: cpmf/parallel/train.cpp cpmf/parallel/fpsgd/fpsgd.hpp cpmf/parallel/line_based/line_based.hpp cpmf/parallel/tp_based/tp_based.hpp
+	$(CXX) $(CFLAGS) $(TP_FLAGS) $(DFLAGS) $(INCLUDE_FLAGS) -c -o $@ $<
 
 # for tp_based
-ifeq ($(PARALLEL_FLAGS), -DTP_BASED)
-OBJ += train.o scheduler.o
-%.o: cpmf/parallel/tp_based/%.cpp cpmf/parallel/tp_based/tp_based.hpp
-	$(CXX) $(CFLAGS) $(DFLAGS) $(TP_INC_FLAGS) $(CPMF_INC_FLAGS) \
-		$(TP_LIB_FLAGS) $(TP_FLAGS) -c -o $@ $<
+ifeq ($(DPARALLEL), -DTP_BASED)
+OBJ += scheduler.o
+%.o: cpmf/parallel/tp_based/%.cpp cpmf/parallel/tp_based/tp_based.hpp cpmf/parallel/tp_based/tp_switch.hpp
+	$(CXX) $(CFLAGS) $(TP_FLAGS) $(DFLAGS) $(INCLUDE_FLAGS) -c -o $@ $<
 endif
 
 # for line_based
-ifeq ($(PARALLEL_FLAGS), -DLINE_BASED)
-OBJ += train.o scheduler.o thread_pool.o
+ifeq ($(DPARALLEL), -DLINE_BASED)
+OBJ += scheduler.o thread_pool.o
 %.o: cpmf/parallel/line_based/%.cpp cpmf/parallel/line_based/line_based.hpp
-	$(CXX) $(CFLAGS) $(DFLAGS) $(CPMF_INC_FLAGS) -c -o $@ $<
+	$(CXX) $(CFLAGS) $(TP_FLAGS) $(DFLAGS) $(INCLUDE_FLAGS) -c -o $@ $<
 endif
 
 # for fpsgd
-ifeq ($(PARALLEL_FLAGS), -DFPSGD)
-OBJ += train.o scheduler.o thread_pool.o
+ifeq ($(DPARALLEL), -DFPSGD)
+OBJ += scheduler.o thread_pool.o
 %.o: cpmf/parallel/fpsgd/%.cpp cpmf/parallel/fpsgd/fpsgd.hpp
-	$(CXX) $(CFLAGS) $(DFLAGS) $(CPMF_INC_FLAGS) -c -o $@ $<
+	$(CXX) $(CFLAGS) $(TP_FLAGS) $(DFLAGS) $(INCLUDE_FLAGS) -c -o $@ $<
 endif
 
 mf: cpmf/main.cpp $(OBJ)
-	$(CXX) $(CFLAGS) $(DFLAGS) $(TP_INC_FLAGS) $(PICO_INC_FLAGS) \
-		$(CPMF_INC_FLAGS) $(PARALLEL_FLAGS) $(TP_FLAGS) $(TP_LIB_FLAGS) -o $@ $<
+	$(CXX) $(CFLAGS) $(TP_FLAGS) $(DFLAGS) $(PICO_INC_FLAGS) $(INCLUDE_FLAGS) -o $@ $<
 
 clean:
 	rm -f mf $(OBJ)

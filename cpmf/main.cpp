@@ -9,26 +9,21 @@
 #include <cpmf/common/model.cpp>
 #include <cpmf/utils/timer.cpp>
 #include <cpmf/utils/logger.cpp>
+#include <cpmf/parallel/train.cpp>
 #include "config.hpp"
 
 #include <picojson.h>
 
 #if defined TP_BASED
-#include <cpmf/parallel/tp_based/train.cpp>
 #include <cpmf/parallel/tp_based/scheduler.cpp>
-using namespace cpmf::parallel::tp_based;
 
 #elif defined LINE_BASED
-#include <cpmf/parallel/line_based/train.cpp>
 #include <cpmf/parallel/line_based/scheduler.cpp>
 #include <cpmf/parallel/line_based/thread_pool.cpp>
-using namespace cpmf::parallel::line_based;
 
 #elif defined FPSGD
-#include <cpmf/parallel/fpsgd/train.cpp>
 #include <cpmf/parallel/fpsgd/scheduler.cpp>
 #include <cpmf/parallel/fpsgd/thread_pool.cpp>
-using namespace cpmf::parallel::fpsgd;
 
 #endif
 
@@ -149,7 +144,7 @@ int main(int argc, char *argv[]) {
   timer.stop("ends.");
 
   // begin training
-  train(R, model, config->base_params);
+  cpmf::parallel::train(R, model, config->base_params);
 
   return EXIT_SUCCESS;
 }

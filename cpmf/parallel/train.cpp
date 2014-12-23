@@ -1,9 +1,9 @@
+#include <cpmf/common/common.hpp>
 #include <cpmf/utils/utils.hpp>
-#include "line_based.hpp"
+#include "switch.hpp"
 
 namespace cpmf {
 namespace parallel {
-namespace line_based {
 
 void train(const std::shared_ptr<cpmf::common::Matrix> R,
            std::shared_ptr<cpmf::common::Model> model,
@@ -28,6 +28,5 @@ void train(const std::shared_ptr<cpmf::common::Matrix> R,
   scheduler.terminate();
 }
 
-} // namespace line_based
 } // namespace parallel
 } // namespace cpmf
