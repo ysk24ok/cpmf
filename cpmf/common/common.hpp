@@ -61,7 +61,7 @@ class Model {
 
  private:
   void initialize_matrix(std::unique_ptr<float> &uniq_p, const int &num);
-  void set_initial_loss(const std::vector<Block> &blocks);
+  void set_initial_losses(const std::vector<Block> &blocks);
 
   std::vector<std::vector<float>> losses_;
 };
