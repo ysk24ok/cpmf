@@ -12,7 +12,7 @@ Model::Model(const cpmf::ModelParams &model_params,
     : params(model_params) {
   initialize_matrix(P, R->num_users);
   initialize_matrix(Q, R->num_items);
-  calc_initial_loss(R->blocks);
+  set_initial_losses(R->blocks);
 }
 
 float Model::calc_rmse() {
@@ -37,7 +37,7 @@ void Model::initialize_matrix(std::unique_ptr<float> &uniq_p, const int &num) {
   for (int i = 0; i < size; i++) { raw_p[i] = mt() % 1000 / 1000.0; }
 }
 
-void Model::calc_initial_loss(std::vector<Block> blocks) {
+void Model::set_initial_losses(const std::vector<Block> &blocks) {
   const int dim = params.dim;
   const int num_blocks = blocks.size();
   losses_.resize(num_blocks, std::vector<float> (0.0));
