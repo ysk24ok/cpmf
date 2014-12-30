@@ -24,9 +24,9 @@ void Scheduler::ThreadPool::initialize(
 void Scheduler::ThreadPool::run(const std::shared_ptr<cpmf::common::Matrix> R,
                                 std::shared_ptr<cpmf::common::Model> model) {
   while (true) {
-    const int block_id = get_free_block_id();
-    model->sgd(R->blocks[block_id]);
-    after_processed(block_id);
+    const int bid = get_free_block_id();
+    model->sgd(bid, R->blocks[bid]);
+    after_processed(bid);
     if (is_terminated()) { break; }
   }
 }

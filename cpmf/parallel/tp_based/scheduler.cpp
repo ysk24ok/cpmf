@@ -22,9 +22,9 @@ void Scheduler::grid_recursively(const int &block_length,
                                  const int &initial_item_id) {
   const int half_len = block_length / 2;
   if (half_len == 0) {
-    const int block_id = initial_user_id * matrix_ptr->num_item_blocks
-                          + initial_item_id;
-    model_ptr->sgd(matrix_ptr->blocks[block_id]);
+    const int bid = initial_user_id * matrix_ptr->num_item_blocks
+                      + initial_item_id;
+    model_ptr->sgd(bid, matrix_ptr->blocks[bid]);
     return;
   }
 

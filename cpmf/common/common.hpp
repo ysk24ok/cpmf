@@ -25,6 +25,7 @@ struct Block {
   std::vector<Node> nodes;
 };
 
+
 class Matrix {
  public:
   Matrix(const cpmf::DataParams &data_params);
@@ -50,40 +51,36 @@ class Matrix {
 
 class Model {
  public:
-  Model(const cpmf::ModelParams &model_params,
-        const int &num_u, const int &num_i);
+  Model(const cpmf::ModelParams &model_params, const std::shared_ptr<Matrix> R);
 
-  float calc_rmse(const std::shared_ptr<Matrix> R);
-  inline void sgd(const Block &block);
+  float calc_rmse();
+  inline void sgd(const int &block_id, const Block &block);
 
   cpmf::ModelParams params;
-  std::vector<std::vector<float>> P, Q;
+  std::unique_ptr<float> P, Q;
 
  private:
-  void initialize(std::vector<std::vector<float>> * submatrix);
-  inline float calc_error(const int &uid, const int &iid, const float &rate);
+  void initialize_matrix(std::unique_ptr<float> &uniq_p, const int &num);
+  void calc_initial_loss(std::vector<Block> blocks);
+
+  std::vector<std::vector<float>> losses_;
 };
 
-inline float Model::calc_error(const int &uid, const int &iid,
-                               const float &rate) {
-  const std::vector<float> * p = &P[uid];
-  const std::vector<float> * q = &Q[iid];
-  return rate - std::inner_product(p->begin(), p->end(), q->begin(), 0.0);
-}
-
-inline void Model::sgd(const Block &block) {
+inline void Model::sgd(const int &block_id, const Block &block) {
+  const int dim = params.dim;
   const float step_size = params.step_size;
-  const float lp = step_size * params.lp;
-  const float lq = step_size * params.lq;
 
-  for (const auto &node : block.nodes) {
-    int uid = node.user_id - 1;
-    int iid = node.item_id - 1;
-    float error = calc_error(uid, iid, node.rating) * step_size;
-    for (int d = 0, dim = params.dim; d < dim; d++) {
-      float tmp_p_val = P[uid][d];
-      P[uid][d] += error * Q[iid][d] - lp * P[uid][d];
-      Q[iid][d] += error * tmp_p_val - lq * Q[iid][d];
+  for (int nid = 0, num_nodes = block.nodes.size(); nid < num_nodes; nid++) {
+    const auto &node = block.nodes[nid];
+    // TODO: duplicate calculation
+    float * p = P.get() + (node.user_id - 1) * dim;
+    float * q = Q.get() + (node.item_id - 1) * dim;
+    float error = node.rating - std::inner_product(p, p+dim, q, 0.0);
+    losses_[block_id][nid] = error * error;
+    for (int d = 0; d < dim; d++) {
+      float temp = p[d];
+      p[d] += (error * q[d] - params.lp * p[d]) * step_size;
+      q[d] += (error * temp - params.lq * q[d]) * step_size;
     }
   }
 }

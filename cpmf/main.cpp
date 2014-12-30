@@ -131,16 +131,16 @@ int main(int argc, char *argv[]) {
 
   // parse input_data
   timer.start("Now parsing input data...");
-  std::shared_ptr<cpmf::common::Matrix> R(new cpmf::common::Matrix(
-                                            config->data_params));
+  std::shared_ptr<cpmf::common::Matrix>
+    R(new cpmf::common::Matrix(config->data_params));
   timer.stop("ends.");
   R->show_info();
 
   // initialize model
   timer.start("Now initializing model...");
-  std::shared_ptr<cpmf::common::Model> model(new cpmf::common::Model(
-                                               config->model_params,
-                                               R->num_users, R->num_items));
+  std::shared_ptr<cpmf::common::Model>
+    model(new cpmf::common::Model(config->model_params, R));
+
   timer.stop("ends.");
 
   // begin training
