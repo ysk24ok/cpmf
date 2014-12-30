@@ -58,6 +58,8 @@ std::unique_ptr<cpmf::Config> parse_config_json(std::ifstream &conf_ifs) {
           bp.max_iter = static_cast<int>( val.get<double>() );
         } else if(key == "num_threads") {
           bp.num_threads = static_cast<int>( val.get<double>() );
+        } else if(key == "calc_rmse") {
+          bp.calc_rmse = static_cast<int>( val.get<bool>() );
         }
 
       } else if (type == "model") {

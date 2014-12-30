@@ -6,9 +6,10 @@
 namespace cpmf {
 
 struct BaseParams {
-  BaseParams() : max_iter(10), num_threads(4) {};
+  BaseParams() : max_iter(10), num_threads(4), calc_rmse(true) {};
 
   int max_iter, num_threads;
+  bool calc_rmse;
 };
 
 struct ModelParams {
