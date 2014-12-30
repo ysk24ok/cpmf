@@ -30,7 +30,7 @@ void Scheduler::ThreadPool::run(const std::shared_ptr<cpmf::common::Matrix> R,
     for (int i = 1, total = num_user_blocks_ / num_threads_; i <= total; i++) {
       for (int j = 1; j <= num_item_blocks_; j++) {
         bid = uid * num_item_blocks_ + iid;
-        model->sgd(R->blocks[bid]);
+        model->sgd(bid, R->blocks[bid]);
         if (is_terminated()) { return; }
         wait_for_other_threads();
         // assign the next block except the last subiteration
