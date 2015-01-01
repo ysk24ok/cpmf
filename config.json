@@ -10,7 +10,8 @@
     "step_size": 0.005,
     "regularization_cost_for_P": 0.003,
     "regularization_cost_for_Q": 0.003,
-    "input_path": "./model.bin",
+    "read_model": true,
+    "write_model": true,
     "output_path": "./model.bin"
   },
 

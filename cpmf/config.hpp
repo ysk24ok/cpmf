@@ -14,22 +14,22 @@ struct BaseParams {
 
 struct ModelParams {
   ModelParams() :
-    dim(40), lp(1), lq(1), step_size(0.005),
-    input_path("./model.bin"), output_path("./model.bin") {}
+    read_model(false), write_model(true),
+    dim(40), lp(1), lq(1), step_size(0.005), output_path("./model.bin") {}
 
+  bool read_model, write_model;
   int dim;
   float lp, lq, step_size;
-  std::string input_path, output_path;
+  std::string output_path;
 };
 
 struct DataParams {
   DataParams() :
-    num_user_blocks(1), num_item_blocks(1),
-    randomize(false),
+    randomize(false), num_user_blocks(1), num_item_blocks(1),
     input_path("./input/testdata"), output_path("./output/testdata.bin") {}
 
-  int num_user_blocks, num_item_blocks;
   bool randomize;
+  int num_user_blocks, num_item_blocks;
   std::string input_path, output_path;
 };
 
@@ -45,4 +45,4 @@ struct Config {
 
 } // namespace cpmf
 
-#endif
+#endif // CPMF_CONFIG_HPP_

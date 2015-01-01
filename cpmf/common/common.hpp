@@ -55,11 +55,13 @@ class Model {
   Model(const cpmf::ModelParams &model_params, const std::shared_ptr<Matrix> R);
 
   float calc_rmse();
+  void write_to_disk();
   inline void sgd(const int &block_id, const Block &block);
 
  private:
   void fill_with_random_value(std::unique_ptr<float> &uniq_p, const int &size);
   void set_initial_losses(const std::vector<Block> &blocks);
+  void read_from_disk();
 
   cpmf::ModelParams params_;
   int num_users_, num_items_, num_blocks_;
