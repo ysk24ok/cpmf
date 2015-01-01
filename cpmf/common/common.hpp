@@ -18,6 +18,7 @@ struct Node {
   float rating;
 };
 
+
 struct Block {
   Block(const int &block_user_id, const int &block_item_id)
     : user_id(block_user_id), item_id(block_item_id), nodes(0) {}
@@ -56,19 +57,19 @@ class Model {
   float calc_rmse();
   inline void sgd(const int &block_id, const Block &block);
 
-  cpmf::ModelParams params;
-  std::unique_ptr<float> P, Q;
-
  private:
-  void initialize_matrix(std::unique_ptr<float> &uniq_p, const int &num);
+  void fill_with_random_value(std::unique_ptr<float> &uniq_p, const int &size);
   void set_initial_losses(const std::vector<Block> &blocks);
 
+  cpmf::ModelParams params_;
+  int num_users_, num_items_, num_blocks_;
   std::vector<std::vector<float>> losses_;
+  std::unique_ptr<float> P, Q;
 };
 
 inline void Model::sgd(const int &block_id, const Block &block) {
-  const int dim = params.dim;
-  const float step_size = params.step_size;
+  const int dim = params_.dim;
+  const float step_size = params_.step_size;
 
   for (int nid = 0, num_nodes = block.nodes.size(); nid < num_nodes; nid++) {
     const auto &node = block.nodes[nid];
@@ -79,8 +80,8 @@ inline void Model::sgd(const int &block_id, const Block &block) {
     losses_[block_id][nid] = error * error;
     for (int d = 0; d < dim; d++) {
       float temp = p[d];
-      p[d] += (error * q[d] - params.lp * p[d]) * step_size;
-      q[d] += (error * temp - params.lq * q[d]) * step_size;
+      p[d] += (error * q[d] - params_.lp * p[d]) * step_size;
+      q[d] += (error * temp - params_.lq * q[d]) * step_size;
     }
   }
 }
