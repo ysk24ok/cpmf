@@ -71,8 +71,10 @@ std::unique_ptr<cpmf::Config> parse_config_json(std::ifstream &conf_ifs) {
           mp.lp = static_cast<float>( val.get<double>() );
         } else if (key == "regularization_cost_for_Q") {
           mp.lq = static_cast<float>( val.get<double>() );
-        } else if (key == "input_path") {
-          mp.input_path = val.get<std::string>();
+        } else if (key == "read_model") {
+          mp.read_model = val.get<bool>();
+        } else if (key == "write_model") {
+          mp.write_model = val.get<bool>();
         } else if (key == "output_path") {
           mp.output_path = val.get<std::string>();
         }
@@ -142,11 +144,15 @@ int main(int argc, char *argv[]) {
   timer.start("Now initializing model...");
   std::shared_ptr<cpmf::common::Model>
     model(new cpmf::common::Model(config->model_params, R));
-
   timer.stop("ends.");
 
   // begin training
   cpmf::parallel::train(R, model, config->base_params);
+
+  // write model to disk
+  timer.start("Writing model...");
+  model->write_to_disk();
+  timer.stop("ends.");
 
   return EXIT_SUCCESS;
 }

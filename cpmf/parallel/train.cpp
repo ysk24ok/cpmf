@@ -16,12 +16,11 @@ void train(const std::shared_ptr<cpmf::common::Matrix> R,
   // print header
   if (base_params.calc_rmse) {
     logger.put_table_header("iteration", 2, "time", "RMSE");
-    logger.put_table_row(0, 2, 0.000, model->calc_rmse());
   } else {
     logger.put_table_header("iteration", 1, "time");
-    logger.put_table_row(0, 1, 0.000);
   }
 
+  // training
   timer.start();
   scheduler.start(R, model);
   for (int iter = 1; iter <= base_params.max_iter; iter++) {
