@@ -19,8 +19,9 @@ class Scheduler {
   void terminate() {}
 
  private:
-  void grid_recursively(const int &block_length,
-                        const int &initial_user_id, const int &initial_item_id);
+  void grid_recursively(const int &user_block_length,
+                        const int &item_block_length,
+                        const int &top_user_id, const int &left_item_id);
 
   std::shared_ptr<cpmf::common::Matrix> matrix_ptr;
   std::shared_ptr<cpmf::common::Model> model_ptr;
