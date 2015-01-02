@@ -54,9 +54,10 @@ class Model {
  public:
   Model(const cpmf::ModelParams &model_params, const std::shared_ptr<Matrix> R);
 
+  inline void sgd(const int &block_id, const Block &block);
   float calc_rmse();
   void write_to_disk();
-  inline void sgd(const int &block_id, const Block &block);
+  void show_info();
 
  private:
   void fill_with_random_value(std::unique_ptr<float> &uniq_p, const int &size);

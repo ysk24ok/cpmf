@@ -4,6 +4,7 @@
 #include <iostream>
 #include <numeric>
 #include <random>
+#include <string>
 
 #include "common.hpp"
 
@@ -109,6 +110,17 @@ void Model::write_to_disk() {
   for (int i = 0, size = num_items_ * params_.dim; i < size; i++) {
     fout.write(reinterpret_cast<char*>(&q[i]), sizeof(float));
   }
+}
+
+void Model::show_info() {
+  std::string info = "";
+  info += "--- MODEL INFO---\n";
+  info += "  dimension        : " + std::to_string(params_.dim) + "\n";
+  info += "  step size        : " + std::to_string(params_.step_size) + "\n";
+  info += "  regularizer of P : " + std::to_string(params_.lp) + "\n";
+  info += "  regularizer of Q : " + std::to_string(params_.lq) + "\n";
+  info += "  output path      : " + params_.output_path + "\n";
+  std::cout << info << std::endl;
 }
 
 } // namespace common
