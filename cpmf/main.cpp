@@ -138,14 +138,14 @@ int main(int argc, char *argv[]) {
   std::shared_ptr<cpmf::common::Matrix>
     R(new cpmf::common::Matrix(config->data_params));
   timer.stop("ends.");
-  R->show_info();
+  R->show_info("==== MATRIX INFO ====");
 
   // initialize model
   timer.start("Now initializing model...");
   std::shared_ptr<cpmf::common::Model>
     model(new cpmf::common::Model(config->model_params, R));
   timer.stop("ends.");
-  model->show_info();
+  model->show_info("==== MODEL INFO ====");
 
   // begin training
   cpmf::parallel::train(R, model, config->base_params);

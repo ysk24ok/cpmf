@@ -112,9 +112,8 @@ void Model::write_to_disk() {
   }
 }
 
-void Model::show_info() {
-  std::string info = "";
-  info += "--- MODEL INFO---\n";
+void Model::show_info(const std::string &message) {
+  std::string info = message + "\n";
   info += "  dimension        : " + std::to_string(params_.dim) + "\n";
   info += "  step size        : " + std::to_string(params_.step_size) + "\n";
   info += "  regularizer of P : " + std::to_string(params_.lp) + "\n";

@@ -30,7 +30,7 @@ struct Block {
 class Matrix {
  public:
   Matrix(const cpmf::DataParams &data_params);
-  void show_info();
+  void show_info(const std::string &message);
 
   long num_ratings;
   int num_users, num_items, num_user_blocks, num_item_blocks;
@@ -57,7 +57,7 @@ class Model {
   inline void sgd(const int &block_id, const Block &block);
   float calc_rmse();
   void write_to_disk();
-  void show_info();
+  void show_info(const std::string &message);
 
  private:
   void fill_with_random_value(std::unique_ptr<float> &uniq_p, const int &size);

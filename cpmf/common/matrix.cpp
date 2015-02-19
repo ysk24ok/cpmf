@@ -88,7 +88,7 @@ void Matrix::sort_nodes_by_user_id() {
   }
 }
 
-void Matrix::show_info() {
+void Matrix::show_info(const std::string &message) {
   int num_min_ratings = std::numeric_limits<int>::max();
   int num_max_ratings = 0;
   for (int bid = 0, num_blks = blocks.size(); bid < num_blks; bid++) {
@@ -97,8 +97,7 @@ void Matrix::show_info() {
     if (n > num_max_ratings) { num_max_ratings = n; }
   }
 
-  std::string info = "";
-  info += "--- MATRIX INFO ---\n";
+  std::string info = message + "\n";
   info += "  number of users       : " + std::to_string(num_users) + "\n";
   info += "  number of items       : " + std::to_string(num_items) + "\n";
   info += "  number of ratings     : " + std::to_string(num_ratings) + "\n";
