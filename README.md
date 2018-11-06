@@ -59,14 +59,6 @@ Users can designate the parallel method by `PARALLEL_FLAGS` in Makefile.
   or
   `DTP = -DTP_MYTH` for *MassiveThreads*.
 
-* **line based**
-
-  *line_based* is a more cache-friendly method for matrix factorization.
-  Threads work on blocks whose row or column is shared by the previous one.
-
-  If you want to use *line based* method,
-  specify `DPARALLE = -DLINE_BASED`.
-
 
 # How to use
 

@@ -12,10 +12,9 @@ DPARALLEL := -DTP_BASED
 	# which task parallel library to use
 	DTP := -DTP_CILK
 	# DTP := -DTP_MYTH
-# DPARALLEL := -DLINE_BASED
 
 
-# for fpsgd and line_based
+# for fpsgd
 TP_FLAGS := -lpthread
 
 # for Cilk
@@ -52,20 +51,13 @@ all: mf
 %.o: cpmf/utils/%.cpp cpmf/utils/utils.hpp
 	$(CXX) $(CFLAGS) $(INCLUDE_FLAGS) -c -o $@ $<
 
-train.o: cpmf/parallel/train.cpp cpmf/parallel/fpsgd/fpsgd.hpp cpmf/parallel/line_based/line_based.hpp cpmf/parallel/tp_based/tp_based.hpp
+train.o: cpmf/parallel/train.cpp cpmf/parallel/fpsgd/fpsgd.hpp cpmf/parallel/tp_based/tp_based.hpp
 	$(CXX) $(CFLAGS) $(TP_FLAGS) $(DFLAGS) $(INCLUDE_FLAGS) -c -o $@ $<
 
 # for tp_based
 ifeq ($(DPARALLEL), -DTP_BASED)
 OBJ += scheduler.o
 %.o: cpmf/parallel/tp_based/%.cpp cpmf/parallel/tp_based/tp_based.hpp cpmf/parallel/tp_based/tp_switch.hpp
-	$(CXX) $(CFLAGS) $(TP_FLAGS) $(DFLAGS) $(INCLUDE_FLAGS) -c -o $@ $<
-endif
-
-# for line_based
-ifeq ($(DPARALLEL), -DLINE_BASED)
-OBJ += scheduler.o thread_pool.o
-%.o: cpmf/parallel/line_based/%.cpp cpmf/parallel/line_based/line_based.hpp
 	$(CXX) $(CFLAGS) $(TP_FLAGS) $(DFLAGS) $(INCLUDE_FLAGS) -c -o $@ $<
 endif
 
