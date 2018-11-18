@@ -5,10 +5,6 @@
 #include <cpmf/parallel/tp_based/tp_based.hpp>
 using namespace cpmf::parallel::tp_based;
 
-#elif defined LINE_BASED
-#include <cpmf/parallel/line_based/line_based.hpp>
-using namespace cpmf::parallel::line_based;
-
 #elif defined FPSGD
 #include <cpmf/parallel/fpsgd/fpsgd.hpp>
 using namespace cpmf::parallel::fpsgd;

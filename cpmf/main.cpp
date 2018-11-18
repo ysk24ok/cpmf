@@ -17,10 +17,6 @@
 #if defined TP_BASED
 #include <cpmf/parallel/tp_based/scheduler.cpp>
 
-#elif defined LINE_BASED
-#include <cpmf/parallel/line_based/scheduler.cpp>
-#include <cpmf/parallel/line_based/thread_pool.cpp>
-
 #elif defined FPSGD
 #include <cpmf/parallel/fpsgd/scheduler.cpp>
 #include <cpmf/parallel/fpsgd/thread_pool.cpp>
