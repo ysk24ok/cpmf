@@ -15,15 +15,17 @@ $ git clone https://github.com/kazuho/picojson.git vendor/picojson
 
 ## optional
 
-If you want to use *MassiveThreads* as a task parallel library,
-install it under vendor/massivethreads by the following command.
+If you want to use MassiveThreads as a task parallel library,
+install it by the following command.
 
-```
-$ svn checkout http://massivethreads.googlecode.com/svn/trunk/ vendor/massivethreads
+```sh
+$ git clone https://github.com/massivethreads/massivethreads.git vendor/massivethreads
 $ cd vendor/massivethreads
-$ ./configure --prefix=[absolute path to vendor/massivethreads]
+$ ./configure --prefix=/usr/local
 $ make && make install
 ```
+
+When you change PREFIX from `/usr/local`, be sure to also change `MYTH_PATH` in Makefile.
 
 # How to parallelize
 
