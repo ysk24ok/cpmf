@@ -69,7 +69,7 @@ OBJ += scheduler.o thread_pool.o
 endif
 
 mf: cpmf/main.cpp $(OBJ)
-	$(CXX) $(CFLAGS) $(TP_FLAGS) $(DFLAGS) $(PICO_INC_FLAGS) $(INCLUDE_FLAGS) -o $@ $<
+	$(CXX) $(CFLAGS) $(TP_FLAGS) $(DFLAGS) $(PICO_INC_FLAGS) $(INCLUDE_FLAGS) -o $@ $^
 
 clean:
 	rm -f mf $(OBJ)

@@ -5,23 +5,12 @@
 #include <memory>
 #include <cstdlib>
 
-#include <cpmf/common/matrix.cpp>
-#include <cpmf/common/model.cpp>
-#include <cpmf/utils/timer.cpp>
-#include <cpmf/utils/logger.cpp>
-#include <cpmf/parallel/train.cpp>
-#include "config.hpp"
-
 #include <picojson.h>
 
-#if defined TP_BASED
-#include <cpmf/parallel/tp_based/scheduler.cpp>
-
-#elif defined FPSGD
-#include <cpmf/parallel/fpsgd/scheduler.cpp>
-#include <cpmf/parallel/fpsgd/thread_pool.cpp>
-
-#endif
+#include "config.hpp"
+#include "common/common.hpp"
+#include "utils/utils.hpp"
+#include "parallel/switch.hpp"
 
 
 namespace cpmf {

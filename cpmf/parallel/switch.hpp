@@ -11,4 +11,14 @@ using namespace cpmf::parallel::fpsgd;
 
 #endif
 
+namespace cpmf {
+namespace parallel {
+
+void train(const std::shared_ptr<cpmf::common::Matrix> R,
+           std::shared_ptr<cpmf::common::Model> model,
+           const cpmf::BaseParams &base_params);
+
+} // namespace parallel
+} // namespace cpmf
+
 #endif // CPMF_PARALLEL_SWITCH_HPP_
