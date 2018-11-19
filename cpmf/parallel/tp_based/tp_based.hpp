@@ -1,7 +1,7 @@
 #ifndef CPMF_PARALLEL_TP_BASED_HPP_
 #define CPMF_PARALLEL_TP_BASED_HPP_
 
-#include <cpmf/common/common.hpp>
+#include "../../common/common.hpp"
 #include "tp_switch.hpp"
 
 namespace cpmf {

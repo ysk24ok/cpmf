@@ -8,7 +8,7 @@
 #include <thread>
 #include <vector>
 
-#include <cpmf/common/common.hpp>
+#include "../../common/common.hpp"
 
 namespace cpmf {
 namespace parallel {

@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-#include <cpmf/config.hpp>
+#include "../config.hpp"
 
 namespace cpmf {
 namespace common {
