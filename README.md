@@ -27,6 +27,28 @@ $ make && make install
 
 When you change PREFIX from `/usr/local`, be sure to also change `MYTH_PATH` in Makefile.
 
+# Converting MovieLens data
+
+Use `scripts/convert_movielens.py` to convert MovieLens data format to cpmf format.
+
+To convert [MovieLens 100K Dataset](https://grouplens.org/datasets/movielens/100k/),
+
+```sh
+$ python scripts/convert_movielens.py PATH/ml-100k/u.data > input/ml-100k
+```
+
+To convert [MovieLens 1M dataset](https://grouplens.org/datasets/movielens/1m/),
+
+```sh
+$ python scripts/convert_movielens.py PATH/ml-1m/ratings.dat --separator :: > input/ml-1m
+```
+
+To convert [MovieLens 10M dataset](https://grouplens.org/datasets/movielens/10m/)
+
+```sh
+$ python scripts/convert_movielens.py PATH/ml-10M100K/ratings.dat --separator :: > input/ml-10m
+```
+
 # How to parallelize
 
 Users can designate the parallel method by `PARALLEL_FLAGS` in Makefile.
