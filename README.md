@@ -1,19 +1,17 @@
 cpmf: Collection of Parallel Matrix Factorization
 ====
 
-This Library is still under construction ...
+## Prerequisite
 
-# Prerequisite
+### required
 
-## must
+`piconjson` is needed to parse config.json.
 
-*cpmf* needs picojson as a JSON parser.
-
-```
+```sh
 $ git clone https://github.com/kazuho/picojson.git vendor/picojson
 ```
 
-## optional
+### optional
 
 If you want to use MassiveThreads as a task parallel library,
 install it by the following command.
@@ -27,7 +25,7 @@ $ make && make install
 
 When you change PREFIX from `/usr/local`, be sure to also change `MYTH_PATH` in Makefile.
 
-# Converting MovieLens data
+## Converting MovieLens data
 
 Use `scripts/convert_movielens.py` to convert MovieLens data format to cpmf format.
 
@@ -49,42 +47,40 @@ To convert [MovieLens 10M dataset](https://grouplens.org/datasets/movielens/10m/
 $ python scripts/convert_movielens.py PATH/ml-10M100K/ratings.dat --separator :: > input/ml-10m
 ```
 
-# How to parallelize
+## Parallel methods
 
-Users can designate the parallel method by `PARALLEL_FLAGS` in Makefile.
+Users can designate the parallel method by `DPARALLEL` in Makefile.
 
-* **FPSGD**
+### FPSGD
 
-  FPSGD is our prior research by researchers at National Taiwan University.
-  In this method, the rating matrix is divided into many blocks
-  and multiple threads work on blocks not to share the same row or column.
-  Our *cpmf* was developed to overcome the scalability problem of FPSGD.
+In FPSGD, the rating matrix is divided into many blocks
+and multiple threads work on blocks not to share the same row or column.
 
-  If you want to use *fpsgd* method,
-  specify `DPARALLEL = -DFPSGD`.
+If you want to use FPSGD method, specify `DPARALLEL = -DFPSGD`.
 
-    + Reference
+- Reference
 
-        Y.Zhuang, W-S.Chin and Y-C.Juan and C-J.Lin},
-        "A fast parallel SGD for matrix factorization in shared memory systems",
-        RecSys'13, [[paper](http://dl.acm.org/citation.cfm?id=2507164)]
+  Y.Zhuang, W-S.Chin and Y-C.Juan and C-J.Lin,
+  "A fast parallel SGD for matrix factorization in shared memory systems",
+  RecSys'13, [paper](http://dl.acm.org/citation.cfm?id=2507164)
 
-* **task parallel based** (by *Intel Cilk* or *MassiveThreads*)
+### dcMF (by Intel Cilk or MassiveThreads)
 
-  This method is our proposing way to parallelize matrix factorization
-  by recursively dividing the rating matrix into 4 smaller blocks
-  and dynamically assigning the created tasks (blocks) to threads.
+dcMF is our proposing way to parallelize matrix factorization
+by recursively dividing the rating matrix into 4 smaller blocks
+and dynamically assigning the created tasks to threads.
 
-  If you want to use *task parallel based* method,
-  specify `DPARALLEL = -DTP_BASED`.
+If you want to use dcMF, specify `DPARALLEL = -DTP_BASED`.
 
-  To decide which task parallel library to use, you should set as follows:
-  `DTP = -DTP_CILK` for *Intel Cilk*
-  or
-  `DTP = -DTP_MYTH` for *MassiveThreads*.
+To decide which task parallel library to use, you should set as follows:
+`DTP = -DTP_CILK` for Intel Cilk or `DTP = -DTP_MYTH` for MassiveThreads.
+
+- Reference
+
+  Y. Nishioka, and K. Taura. "Scalable task-parallel SGD on matrix factorization in multicore architectures." Parallel and Distributed Processing Symposium Workshop (IPDPSW), 2015 IEEE International. [paper](https://ieeexplore.ieee.org/document/7284444)
 
 
-# How to use
+## How to use
 
 Just make and run!
 
