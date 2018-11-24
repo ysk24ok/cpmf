@@ -46,7 +46,6 @@ class Matrix {
   void sort_nodes_by_user_id();
 
   std::string input_path_;
-  std::string output_path_;
 };
 
 

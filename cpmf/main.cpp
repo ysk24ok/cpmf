@@ -71,8 +71,6 @@ std::unique_ptr<cpmf::Config> parse_config_json(std::ifstream &conf_ifs) {
           dp.num_item_blocks = static_cast<float>( val.get<double>() );
         } else if (key == "input_path") {
           dp.input_path = val.get<std::string>();
-        } else if (key == "output_path") {
-          dp.output_path = val.get<std::string>();
         } else if (key == "randomize") {
           dp.randomize = val.get<bool>();
         }

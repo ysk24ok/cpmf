@@ -26,7 +26,7 @@ struct ModelParams {
 struct DataParams {
   DataParams() :
     randomize(false), num_user_blocks(1), num_item_blocks(1),
-    input_path("./input/testdata"), output_path("./output/testdata.bin") {}
+    input_path("./input/testdata") {}
 
   bool randomize;
   int num_user_blocks, num_item_blocks;

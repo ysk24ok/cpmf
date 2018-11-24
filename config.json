@@ -19,7 +19,6 @@
     "num_user_blocks": 4,
     "num_item_blocks": 4,
     "input_path": "./input/testdata",
-    "output_path": "./input/testdata.bin",
     "randomize": true
   }
 }
