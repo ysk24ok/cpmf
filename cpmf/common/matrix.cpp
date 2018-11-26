@@ -14,14 +14,13 @@ Matrix::Matrix(const cpmf::DataParams &data_params)
       input_path_(data_params.input_path) {
   initialize_blocks();
 
-  std::vector<Node> temp_nodes;
-  read(&temp_nodes);
+  read();
 
   std::vector<int> user_mapping(num_users, 0);
   std::vector<int> item_mapping(num_items, 0);
   generate_mapping_vector(&user_mapping, data_params.randomize);
   generate_mapping_vector(&item_mapping, data_params.randomize);
-  assign_nodes(&temp_nodes, user_mapping, item_mapping);
+  assign_nodes(user_mapping, item_mapping);
 
   sort_nodes_by_user_id();
 }
@@ -35,7 +34,7 @@ void Matrix::initialize_blocks() {
   }
 }
 
-void Matrix::read(std::vector<Node> * temp_nodes) {
+void Matrix::read() {
   std::ifstream input_ifs(input_path_.c_str());
   if (input_ifs.fail()) {
     std::cerr << "FileReadError: Cannot open " << input_path_ << std::endl;
@@ -49,7 +48,7 @@ void Matrix::read(std::vector<Node> * temp_nodes) {
     if (node.orig_user_id > num_users) { num_users = node.orig_user_id; }
     if (node.orig_item_id > num_items) { num_items = node.orig_item_id; }
     ++num_ratings;
-    temp_nodes->push_back(node);
+    nodes.push_back(node);
   }
 }
 
@@ -62,13 +61,12 @@ void Matrix::generate_mapping_vector(std::vector<int> * mapping_vec,
   }
 }
 
-void Matrix::assign_nodes(std::vector<Node> * temp_nodes,
-                          const std::vector<int> &user_mapping,
+void Matrix::assign_nodes(const std::vector<int> &user_mapping,
                           const std::vector<int> &item_mapping) {
   const int blk_u_len = num_users / num_user_blocks + 1;
   const int blk_i_len = num_items / num_item_blocks + 1;
 
-  for (auto node_itr = temp_nodes->begin(), node_itr_end = temp_nodes->end();
+  for (auto node_itr = nodes.begin(), node_itr_end = nodes.end();
         node_itr != node_itr_end; ++node_itr) {
     node_itr->user_id = user_mapping[node_itr->orig_user_id - 1];
     node_itr->item_id = item_mapping[node_itr->orig_item_id - 1];

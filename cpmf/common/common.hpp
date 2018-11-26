@@ -34,14 +34,14 @@ class Matrix {
 
   long num_ratings;
   int num_users, num_items, num_user_blocks, num_item_blocks;
+  std::vector<Node> nodes;
   std::vector<Block> blocks;
 
  private:
   void initialize_blocks();
-  void read(std::vector<Node> * temp_nodes);
+  void read();
   void generate_mapping_vector(std::vector<int> * mapping_vec, bool randomize);
-  void assign_nodes(std::vector<Node> * temp_nodes,
-                    const std::vector<int> &user_mapping,
+  void assign_nodes(const std::vector<int> &user_mapping,
                     const std::vector<int> &item_mapping);
   void sort_nodes_by_user_id();
 
