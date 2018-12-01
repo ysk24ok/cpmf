@@ -90,7 +90,6 @@ inline void Model::sgd(const int &block_id, const Block &block) {
 
   for (int nid = 0, num_nodes = block.nodes.size(); nid < num_nodes; nid++) {
     const auto &node = block.nodes[nid];
-    // TODO: duplicate calculation
     float * p = P.get() + (node.user_id - 1) * dim;
     float * q = Q.get() + (node.item_id - 1) * dim;
     float error = node.rating - std::inner_product(p, p+dim, q, 0.0);

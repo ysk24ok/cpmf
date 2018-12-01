@@ -55,17 +55,13 @@ void Model::fill_with_random_value(std::unique_ptr<float> &uniq_p,
 }
 
 void Model::set_initial_losses(const std::vector<Block> &blocks) {
-  const int dim = params_.dim;
   losses_.resize(num_blocks_, std::vector<float> (0.0));
   for (int bid = 0; bid < num_blocks_; bid++) {
     const int num_nodes = blocks[bid].nodes.size();
     losses_[bid].resize(num_nodes, 0.0);
     for (int nid = 0; nid < num_nodes; nid++) {
       const Node &node = blocks[bid].nodes[nid];
-      // TODO: duplicate calculation
-      float * p = P.get() + (node.user_id - 1) * dim;
-      float * q = Q.get() + (node.item_id - 1) * dim;
-      float error = node.rating - std::inner_product(p, p+dim, q, 0.0);
+      float error = calc_error(node);
       losses_[bid][nid] = error * error;
     }
   }
