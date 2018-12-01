@@ -69,8 +69,10 @@ std::unique_ptr<cpmf::Config> parse_config_json(std::ifstream &conf_ifs) {
           dp.num_user_blocks = static_cast<float>( val.get<double>() );
         } else if (key == "num_item_blocks") {
           dp.num_item_blocks = static_cast<float>( val.get<double>() );
-        } else if (key == "input_path") {
-          dp.input_path = val.get<std::string>();
+        } else if (key == "training_path") {
+          dp.training_path = val.get<std::string>();
+        } else if (key == "test_path") {
+          dp.test_path = val.get<std::string>();
         } else if (key == "randomize") {
           dp.randomize = val.get<bool>();
         }

@@ -13,7 +13,7 @@ void train(const std::shared_ptr<cpmf::common::Matrix> R,
 
   // print header
   if (base_params.calc_rmse) {
-    logger.put_table_header("iteration", 2, "time", "RMSE");
+    logger.put_table_header("iteration", 3, "time", "RMSE", "RMSE(test)");
   } else {
     logger.put_table_header("iteration", 1, "time");
   }
@@ -25,7 +25,9 @@ void train(const std::shared_ptr<cpmf::common::Matrix> R,
     scheduler.wait_for_all_blocks_processed();
     float iter_time = timer.pause();
     if (base_params.calc_rmse) {
-      logger.put_table_row(iter, 2, iter_time, model->calc_rmse());
+      float rmse = model->calc_rmse();
+      float rmse_test = model->calc_rmse(R->nodes_test);
+      logger.put_table_row(iter, 3, iter_time, rmse, rmse_test);
     } else {
       logger.put_table_row(iter, 1, iter_time);
     }

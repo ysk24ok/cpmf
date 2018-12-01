@@ -4,6 +4,7 @@
 #include <iostream>
 #include <numeric>
 #include <random>
+#include <sstream>
 #include <string>
 
 #include "common.hpp"
@@ -36,6 +37,15 @@ float Model::calc_rmse() {
   return std::sqrt(sum/num_ratings);
 }
 
+float Model::calc_rmse(const std::vector<Node> &nodes) {
+  float sum = 0.0;
+  for (const auto &node: nodes) {
+    float error = calc_error(node);
+    sum += error * error;
+  }
+  return std::sqrt(sum / nodes.size());
+}
+
 void Model::fill_with_random_value(std::unique_ptr<float> &uniq_p,
                                    const int &size) {
   std::random_device rd;
@@ -45,17 +55,13 @@ void Model::fill_with_random_value(std::unique_ptr<float> &uniq_p,
 }
 
 void Model::set_initial_losses(const std::vector<Block> &blocks) {
-  const int dim = params_.dim;
   losses_.resize(num_blocks_, std::vector<float> (0.0));
   for (int bid = 0; bid < num_blocks_; bid++) {
     const int num_nodes = blocks[bid].nodes.size();
     losses_[bid].resize(num_nodes, 0.0);
     for (int nid = 0; nid < num_nodes; nid++) {
       const Node &node = blocks[bid].nodes[nid];
-      // TODO: duplicate calculation
-      float * p = P.get() + (node.user_id - 1) * dim;
-      float * q = Q.get() + (node.item_id - 1) * dim;
-      float error = node.rating - std::inner_product(p, p+dim, q, 0.0);
+      float error = calc_error(node);
       losses_[bid][nid] = error * error;
     }
   }
@@ -113,13 +119,14 @@ void Model::write_to_disk() {
 }
 
 void Model::show_info(const std::string &message) {
-  std::string info = message + "\n";
-  info += "  dimension        : " + std::to_string(params_.dim) + "\n";
-  info += "  step size        : " + std::to_string(params_.step_size) + "\n";
-  info += "  regularizer of P : " + std::to_string(params_.lp) + "\n";
-  info += "  regularizer of Q : " + std::to_string(params_.lq) + "\n";
-  info += "  output path      : " + params_.output_path + "\n";
-  std::cout << info << std::endl;
+  std::ostringstream oss;
+  oss << message << std::endl;
+  oss << "  dimension        : " << params_.dim << std::endl;
+  oss << "  step size        : " << params_.step_size << std::endl;
+  oss << "  regularizer of P : " << params_.lp << std::endl;
+  oss << "  regularizer of Q : " << params_.lq << std::endl;
+  oss << "  output path      : " << params_.output_path << std::endl;
+  std::cout << oss.str() << std::endl;
 }
 
 } // namespace common

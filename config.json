@@ -18,7 +18,8 @@
   "data": {
     "num_user_blocks": 4,
     "num_item_blocks": 4,
-    "input_path": "./input/testdata",
+    "training_path": "./input/sample.dat",
+    "test_path": "./input/sample_test.dat",
     "randomize": true
   }
 }
