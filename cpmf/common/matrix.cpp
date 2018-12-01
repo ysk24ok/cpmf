@@ -8,19 +8,23 @@ namespace cpmf {
 namespace common {
 
 Matrix::Matrix(const cpmf::DataParams &data_params)
-    : num_ratings(0), num_users(0), num_items(0),
+    : num_ratings(0), num_ratings_test(0), num_users(0), num_items(0),
       num_user_blocks(data_params.num_user_blocks),
       num_item_blocks(data_params.num_item_blocks),
-      input_path_(data_params.input_path) {
+      training_path_(data_params.training_path),
+      test_path_(data_params.test_path) {
   initialize_blocks();
 
-  read();
+  read(training_path_, &num_ratings, &nodes);
+  read(test_path_, &num_ratings_test, &nodes_test);
 
   std::vector<int> user_mapping(num_users, 0);
   std::vector<int> item_mapping(num_items, 0);
   generate_mapping_vector(&user_mapping, data_params.randomize);
   generate_mapping_vector(&item_mapping, data_params.randomize);
-  assign_nodes(user_mapping, item_mapping);
+  assign_user_and_item_id(&nodes, user_mapping, item_mapping);
+  assign_user_and_item_id(&nodes_test, user_mapping, item_mapping);
+  assign_nodes_to_blocks();
 
   sort_nodes_by_user_id();
 }
@@ -34,10 +38,12 @@ void Matrix::initialize_blocks() {
   }
 }
 
-void Matrix::read() {
-  std::ifstream input_ifs(input_path_.c_str());
+void Matrix::read(const std::string &input_path,
+                  long *num_ratings,
+                  std::vector<Node> *nodes) {
+  std::ifstream input_ifs(input_path.c_str());
   if (input_ifs.fail()) {
-    std::cerr << "FileReadError: Cannot open " << input_path_ << std::endl;
+    std::cerr << "FileReadError: Cannot open " << input_path << std::endl;
   }
 
   std::string line_buf;
@@ -47,8 +53,8 @@ void Matrix::read() {
            "%d %d %f\n", &node.orig_user_id, &node.orig_item_id, &node.rating);
     if (node.orig_user_id > num_users) { num_users = node.orig_user_id; }
     if (node.orig_item_id > num_items) { num_items = node.orig_item_id; }
-    ++num_ratings;
-    nodes.push_back(node);
+    ++*num_ratings;
+    nodes->push_back(node);
   }
 }
 
@@ -61,15 +67,22 @@ void Matrix::generate_mapping_vector(std::vector<int> * mapping_vec,
   }
 }
 
-void Matrix::assign_nodes(const std::vector<int> &user_mapping,
-                          const std::vector<int> &item_mapping) {
+void Matrix::assign_user_and_item_id(std::vector<Node> *nodes,
+                                     const std::vector<int> &user_mapping,
+                                     const std::vector<int> &item_mapping) {
+  for (auto node_itr = nodes->begin(), node_itr_end = nodes->end();
+        node_itr != node_itr_end; ++node_itr) {
+    node_itr->user_id = user_mapping[node_itr->orig_user_id - 1];
+    node_itr->item_id = item_mapping[node_itr->orig_item_id - 1];
+  }
+}
+
+void Matrix::assign_nodes_to_blocks() {
   const int blk_u_len = num_users / num_user_blocks + 1;
   const int blk_i_len = num_items / num_item_blocks + 1;
 
   for (auto node_itr = nodes.begin(), node_itr_end = nodes.end();
         node_itr != node_itr_end; ++node_itr) {
-    node_itr->user_id = user_mapping[node_itr->orig_user_id - 1];
-    node_itr->item_id = item_mapping[node_itr->orig_item_id - 1];
     int blk_u_id = (node_itr->user_id - 1) / blk_u_len;
     int blk_i_id = (node_itr->item_id - 1) / blk_i_len;
     int blk_id = blk_u_id * num_item_blocks + blk_i_id;

@@ -33,19 +33,26 @@ class Matrix {
   void show_info(const std::string &message);
 
   long num_ratings;
+  long num_ratings_test;
   int num_users, num_items, num_user_blocks, num_item_blocks;
   std::vector<Node> nodes;
+  std::vector<Node> nodes_test;
   std::vector<Block> blocks;
 
  private:
   void initialize_blocks();
-  void read();
+  void read(const std::string &input_path,
+            long *num_ratings,
+            std::vector<Node> *nodes);
   void generate_mapping_vector(std::vector<int> * mapping_vec, bool randomize);
-  void assign_nodes(const std::vector<int> &user_mapping,
-                    const std::vector<int> &item_mapping);
+  void assign_user_and_item_id(std::vector<Node> *nodes,
+                               const std::vector<int> &user_mapping,
+                               const std::vector<int> &item_mapping);
+  void assign_nodes_to_blocks();
   void sort_nodes_by_user_id();
 
-  std::string input_path_;
+  std::string training_path_;
+  std::string test_path_;
 };
 
 

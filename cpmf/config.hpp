@@ -26,11 +26,11 @@ struct ModelParams {
 struct DataParams {
   DataParams() :
     randomize(false), num_user_blocks(1), num_item_blocks(1),
-    input_path("./input/testdata") {}
+    training_path("./input/sample.dat"), test_path("./input/sample_test.dat") {}
 
   bool randomize;
   int num_user_blocks, num_item_blocks;
-  std::string input_path, output_path;
+  std::string training_path, test_path;
 };
 
 struct Config {
