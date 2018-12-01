@@ -4,6 +4,7 @@
 #include <iostream>
 #include <numeric>
 #include <random>
+#include <sstream>
 #include <string>
 
 #include "common.hpp"
@@ -113,13 +114,14 @@ void Model::write_to_disk() {
 }
 
 void Model::show_info(const std::string &message) {
-  std::string info = message + "\n";
-  info += "  dimension        : " + std::to_string(params_.dim) + "\n";
-  info += "  step size        : " + std::to_string(params_.step_size) + "\n";
-  info += "  regularizer of P : " + std::to_string(params_.lp) + "\n";
-  info += "  regularizer of Q : " + std::to_string(params_.lq) + "\n";
-  info += "  output path      : " + params_.output_path + "\n";
-  std::cout << info << std::endl;
+  std::ostringstream oss;
+  oss << message << std::endl;
+  oss << "  dimension        : " << params_.dim << std::endl;
+  oss << "  step size        : " << params_.step_size << std::endl;
+  oss << "  regularizer of P : " << params_.lp << std::endl;
+  oss << "  regularizer of Q : " << params_.lq << std::endl;
+  oss << "  output path      : " << params_.output_path << std::endl;
+  std::cout << oss.str() << std::endl;
 }
 
 } // namespace common

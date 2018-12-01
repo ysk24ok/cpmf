@@ -2,6 +2,7 @@
 #include <iostream>
 #include <fstream>
 #include <limits>
+#include <sstream>
 #include "common.hpp"
 
 namespace cpmf {
@@ -107,15 +108,17 @@ void Matrix::show_info(const std::string &message) {
     if (n > num_max_ratings) { num_max_ratings = n; }
   }
 
-  std::string info = message + "\n";
-  info += "  number of users       : " + std::to_string(num_users) + "\n";
-  info += "  number of items       : " + std::to_string(num_items) + "\n";
-  info += "  number of ratings     : " + std::to_string(num_ratings) + "\n";
-  info += "  number of user blocks : " + std::to_string(num_user_blocks) + "\n";
-  info += "  number of item blocks : " + std::to_string(num_item_blocks) + "\n";
-  info += "  min ratings of blocks : " + std::to_string(num_min_ratings) + "\n";
-  info += "  max ratings of blocks : " + std::to_string(num_max_ratings) + "\n";
-  std::cout << info << std::endl;
+  std::ostringstream oss;
+  oss << message << std::endl;
+  oss << "  #users:          " << num_users << std::endl;
+  oss << "  #items:          " << num_items << std::endl;
+  oss << "  #ratings:        " << num_ratings << std::endl;
+  oss << "  #ratings (test): " << num_ratings_test << std::endl;
+  oss << "  #blocks (user):  " << num_user_blocks << std::endl;
+  oss << "  #blocks (item):  " << num_item_blocks << std::endl;
+  oss << "  min #ratings in one block: " << num_min_ratings << std::endl;
+  oss << "  max #ratings in one block: " << num_max_ratings << std::endl;
+  std::cout << oss.str() << std::endl;
 }
 
 
