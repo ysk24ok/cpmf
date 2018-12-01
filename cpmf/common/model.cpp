@@ -37,6 +37,15 @@ float Model::calc_rmse() {
   return std::sqrt(sum/num_ratings);
 }
 
+float Model::calc_rmse(const std::vector<Node> &nodes) {
+  float sum = 0.0;
+  for (const auto &node: nodes) {
+    float error = calc_error(node);
+    sum += error * error;
+  }
+  return std::sqrt(sum / nodes.size());
+}
+
 void Model::fill_with_random_value(std::unique_ptr<float> &uniq_p,
                                    const int &size) {
   std::random_device rd;

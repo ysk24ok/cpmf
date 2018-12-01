@@ -60,8 +60,10 @@ class Model {
  public:
   Model(const cpmf::ModelParams &model_params, const std::shared_ptr<Matrix> R);
 
+  inline float calc_error(const Node &node);
   inline void sgd(const int &block_id, const Block &block);
   float calc_rmse();
+  float calc_rmse(const std::vector<Node> &nodes);
   void write_to_disk();
   void show_info(const std::string &message);
 
@@ -75,6 +77,12 @@ class Model {
   std::vector<std::vector<float>> losses_;
   std::unique_ptr<float> P, Q;
 };
+
+inline float Model::calc_error(const Node &node) {
+  float *p = P.get() + (node.user_id - 1) * params_.dim;
+  float *q = Q.get() + (node.item_id - 1) * params_.dim;
+  return node.rating - std::inner_product(p, p+params_.dim, q, 0.0);
+}
 
 inline void Model::sgd(const int &block_id, const Block &block) {
   const int dim = params_.dim;
