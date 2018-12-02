@@ -24,17 +24,6 @@ Model::Model(const cpmf::ModelParams &model_params,
     fill_with_random_value(P, num_users_ * params_.dim);
     fill_with_random_value(Q, num_items_ * params_.dim);
   }
-  set_initial_losses(R->blocks);
-}
-
-float Model::calc_rmse() {
-  float sum = 0;
-  long num_ratings = 0;
-  for (const auto &x : losses_) {
-    sum += std::accumulate(x.begin(), x.end(), 0.0);
-    num_ratings += x.size();
-  }
-  return std::sqrt(sum/num_ratings);
 }
 
 float Model::calc_rmse(const std::vector<Node> &nodes) {
@@ -52,19 +41,6 @@ void Model::fill_with_random_value(std::unique_ptr<float> &uniq_p,
   std::mt19937 mt(rd());
   float * raw_p = uniq_p.get();
   for (int i = 0; i < size; i++) { raw_p[i] = mt() % 1000 / 1000.0; }
-}
-
-void Model::set_initial_losses(const std::vector<Block> &blocks) {
-  losses_.resize(num_blocks_, std::vector<float> (0.0));
-  for (int bid = 0; bid < num_blocks_; bid++) {
-    const int num_nodes = blocks[bid].nodes.size();
-    losses_[bid].resize(num_nodes, 0.0);
-    for (int nid = 0; nid < num_nodes; nid++) {
-      const Node &node = blocks[bid].nodes[nid];
-      float error = calc_error(node);
-      losses_[bid][nid] = error * error;
-    }
-  }
 }
 
 void Model::read_from_disk() {

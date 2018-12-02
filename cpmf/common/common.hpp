@@ -62,19 +62,16 @@ class Model {
 
   inline float calc_error(const Node &node);
   inline void sgd(const int &block_id, const Block &block);
-  float calc_rmse();
   float calc_rmse(const std::vector<Node> &nodes);
   void write_to_disk();
   void show_info(const std::string &message);
 
  private:
   void fill_with_random_value(std::unique_ptr<float> &uniq_p, const int &size);
-  void set_initial_losses(const std::vector<Block> &blocks);
   void read_from_disk();
 
   cpmf::ModelParams params_;
   int num_users_, num_items_, num_blocks_;
-  std::vector<std::vector<float>> losses_;
   std::unique_ptr<float> P, Q;
 };
 
@@ -93,7 +90,6 @@ inline void Model::sgd(const int &block_id, const Block &block) {
     float * p = P.get() + (node.user_id - 1) * dim;
     float * q = Q.get() + (node.item_id - 1) * dim;
     float error = node.rating - std::inner_product(p, p+dim, q, 0.0);
-    losses_[block_id][nid] = error * error;
     for (int d = 0; d < dim; d++) {
       float temp = p[d];
       p[d] += (error * q[d] - params_.lp * p[d]) * step_size;
