@@ -25,7 +25,7 @@ void train(const std::shared_ptr<cpmf::common::Matrix> R,
     scheduler.wait_for_all_blocks_processed();
     float iter_time = timer.pause();
     if (base_params.calc_rmse) {
-      float rmse = model->calc_rmse();
+      float rmse = model->calc_rmse(R->nodes);
       float rmse_test = model->calc_rmse(R->nodes_test);
       logger.put_table_row(iter, 3, iter_time, rmse, rmse_test);
     } else {
